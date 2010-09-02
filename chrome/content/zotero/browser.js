@@ -252,6 +252,7 @@ var Zotero_Browser = new function() {
 	 * object, and updates the status of the capture icon
 	 */
 	function contentLoad(event) {
+		
 		var doc = event.originalTarget;
 		var rootDoc = doc;
 

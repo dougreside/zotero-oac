@@ -472,6 +472,7 @@
                 </toolbar>
 
 		<toolbar id="zotero-annotate-tb-video-drawer-marker" class="zotero-annotate-tb" crop="end" insertbefore="content" hidden="true">
+			<toolbarbutton id="zotero-annotate-tb-video-drawer-movie" group="zotero-annotate-tb-video-drawer" type="radio" tooltiptext="&zotero.annotate.videodrawer.toolbar.movie.label;"/>
 			<toolbarbutton id="zotero-annotate-tb-video-drawer-select" group="zotero-annotate-tb-video-drawer" type="radio" tooltiptext="&zotero.annotate.videodrawer.toolbar.select.label;"/>
 			<toolbarbutton id="zotero-annotate-tb-video-drawer-rectangle" group="zotero-annotate-tb-video-drawer" type="radio" tooltiptext="&zotero.annotate.videodrawer.toolbar.rectangle.label;"/>
 			<toolbarbutton id="zotero-annotate-tb-video-drawer-ellipse" group="zotero-annotate-tb-video-drawer" type="radio" tooltiptext="&zotero.annotate.videodrawer.toolbar.ellipse.label;"/>

@@ -11,7 +11,7 @@ h3 {
 	padding:10px 10px 10px 15px;
 	font-size:85%;
 }
-/* player ui container styles -------------- */
+/* player ui container styles -------------- 
 #player-ui-container {
 	margin-bottom:20px;
 }
@@ -24,7 +24,7 @@ div.player-ui-pause, div.player-ui-play {
 	text-indent:-9999px;
 	float:left;
 	margin-right:5px;
-}
+}*/
 .player-ui-pause {
 	background:url('images/annotate-audio-pause.png') no-repeat;
 }

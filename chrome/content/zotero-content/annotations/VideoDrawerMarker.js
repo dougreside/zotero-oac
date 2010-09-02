@@ -1,27 +1,57 @@
-var p = document.getElementById('player');
+//var p = PInstance[0].playerObject;
 var tm = null, ui = null, oldAnnos = null;
 var allShapes = [];
+var annoMode = false;
 //var oldAudio = {"moments":[],"ranges":[]};
 oldAudio = null;
 var selTime = null;
 var links = [];
 var moments, ranges = null;
-$(document).bind("mediaPlaying",function(e){
-		if ($(".selectedTime").length==0) {
-		sId = 0;
+var allTimes ={"moments":[]};
+var curTime = 0;
+function markNow() {
+	PInstance[0].playerObject.setPause(true);
+	var pos = PInstance[0].playerObject.getPosition();
+	$(".selectedTime").removeClass("selectedTime");	
+	setDrawMode();
+	if (!(allTimes.moments["pos"])){
+
+		newMom = allTimes.moments.push({"time": pos, "shapes":[], "note":"Click here to add a note."});
+		tm.addRow(pos);
+	installHandlers();
+	
+	
+	}
+	
+	
+	
+	return;
+	
+
+}
+
+function markStartEnd() {
+	if (self._start !== null) {
+		if ($(".selectedTime").length == 0) {
+			sId = 0;
 		}
 		else {
 		
-		sId = $(".selectedTime:first").attr("id");
+			sId = $(".selectedTime:first").attr("id");
 		}
+		saveSelectedShapes();
+	}
+	tm.markStartEnd();
+	if (self._start !== null) {
+		installHandlers();
 		
-		//tm._player.seekTo()
-		saveSelectedShapes(sId);
-	
-		drawer.clearObjs();
-		drawer._paper.clear();
 		$(".selectedTime").removeClass("selectedTime");
-});
+		selRange = tm._ranges[tm._ranges.length - 1];
+		$("#" + selRange.id).addClass("selectedTime");
+	}
+
+}
+
 $(document).bind("mediaPaused",function(e){
 	
 });
@@ -59,7 +89,7 @@ function savable() {
 		
 		sId = $(".selectedTime:first").attr("id");
 		}
-	saveSelectedShapes(sId);
+	saveSelectedShapes();
 	
 	timesArray = tm.savable();
 	
@@ -88,159 +118,155 @@ function savable() {
 	
 	
 }
+function setDrawMode(){
+	$(".vd-container").css({
+			"z-index": "13"
+		});
+}
+function setMovieMode(){
+		$(".vd-container").css({
+			"z-index": "9"
+		});
+}
 
 function timeClick(clicked){
-		
-		if ($(".selectedTime").length==0) {
-		sId = 0;
+		for (n in PInstance[0].playerObject){
+			console.log(n);
 		}
-		else {
-		
-		sId = $(".selectedTime:first").attr("id");
+		if (timeVal != "undefined") {
+			var timeVal = parseFloat(clicked.html());
+			PInstance[0].playerObject.setPlay(true);
+			PInstance[0].playerObject.setSeek(timeVal);
+			PInstance[0].playerObject.setPause(true);
+			
 		}
 		
-		//tm._player.seekTo()
-		saveSelectedShapes(sId);
-	
-		drawer.clearObjs();
-		drawer._paper.clear();
-		$(".selectedTime").removeClass("selectedTime");
-		$(clicked).parent().addClass("selectedTime");
-		time = $(clicked).parent().find("td:first").text();
-	
-		if (time.indexOf("to")>0){
-			time = time.substring(time.indexOf("to"))
-		}
-	
-		var realTime = parseTime(time);
-	
-		var percent =(parseFloat(realTime)/tm._player.getDuration())*100;
 		
-		//ui.seekToPos(null,"#player-ui-seek",parseFloat(realTime));
-		//ui.seekToPos(null,tm,percent);
-		tm._player.seekTo(realTime);
-		tm._player.play();
-		tm._player.pause();
-		tId = $(clicked).parent().attr("id");
-		showShapes(tId,true);	
 }
 function installHandlers(){
 	
 	$(".time-marker-moment>td").unbind("click");
 	$(".time-marker-range>td").unbind("click");
-	$(".time-marker-moment>td").bind("click",function(e,ui){
-		timeClick(this);
+	$(".startTime").click(function(e){
+		timeClick($(this))
 	});
-	$(".time-marker-range>td").bind("click",function(e,ui){
-		timeClick(this);
+	PInstance[0].addListener("start",function(e){
+		console.log("START");
+		//saveSelectedShapes();
+		clearShapes();
+	//	drawer.clearObjs();
+	//	drawer._paper.clear();
 	});
-}
-function showShapes(tId,shouldClear){
-	
-	drawer.clearObjs();
-	drawer._paper.clear();
-	drawer._allObjs=[];
-	var shapes = [];
-	for (var i=0;i<allShapes.length;i++){
-		st = allShapes[i];
-		if ((st.timeId) == (tId)){
-			drawer._allObjs.push(_.clone(st));
-			shapes.push(i);
-		}
-	}
-	if (shouldClear) {
-		for (var i = shapes.length - 1; i >= 0; i--) {
+	PInstance[0].addListener("play",function(e){
+		console.log("PLAY");
 		
-			allShapes.splice(parseInt(shapes[i]), 1);
-		}
-	}
-
-	drawer._redrawShapes(drawer);
+		//saveSelectedShapes();
+		
+		clearShapes();
+		//saveSelectedShapes(sId);
+		//drawer.clearObjs();
+		//drawer._paper.clear();
+	});
+	PInstance[0].addListener("seek",function(e){
+		console.log("SEEK");
+		//saveSelectedShapes();
+		sId = PInstance[0].playerObject.getPosition();
+		curTime = sId;
+		showShapes(sId);
+		console.log(sId);
+		clearShapes();
 	
+		});
+	PInstance[0].addListener("pause",function(e){
+		console.log("paused");
+		curTime = PInstance[0].playerObject.getPosition();
+	});	
+	
+	$("body").eq(0).bind("shapeDrawn",function(e,shape){
+		console.log("shapeDrawn");
+		saveSelectedShapes();
+	});
+	$("body").eq(0).bind("shapeChanged",function(e,shape){
+		saveSelectedShapes();
+	});
+	$("body").eq(0).bind("timeSelect",function(e,time){
+		
+		//var t = parseFloat(time);
+		//saveSelectedShapes();
+		clearShapes();
+		curTime = time;
+		PInstance[0].playerObject.setPause(true);
+		PInstance[0].playerObject.setSeek(time);
+		showShapes(time);
+	});
 	
 }
-function saveSelectedShapes(sId){
-	if (drawer) {
-		var momentShapes = [];
-		momentShapes = drawer.savable();
-		for (var n = 0; n < momentShapes.length; n++) {
-			ms = momentShapes[n];
+
+function clearShapes(){
+	console.log("Clear Shapes");
+	drawer.clearShapes();
+}	
+
+function showShapes(tId){
+	
+	clearShapes();
+	var exists = _.detect(allTimes.moments,function(item){return item.time==tId;});
+	if (!(_.isUndefined(exists))) {
+		if (!(_.isUndefined(exists.shapes))) {
 			
-			if (ms.con) {
-				ms.timeId = sId;
-				allShapes.push(ms);
-			}
-			
+			drawer.importShapes(exists.shapes);
 		}
-		if ($(".selectedTime").length > 0) {
-			drawer.clearObjs();
-			drawer._paper.clear();
-		}
-		drawer._allObjs = [];
 	}
-		return;
+	
 	
 }
-function markNow() {
-
-	if (tm._moments.length == 0) {
-		sId = "mom_" + 0;
-	}
-	else 
-		if ($(".selectedTime").length > 0) {
+function saveSelectedShapes(){
+	console.log("Saving Current time: "+curTime);
+	var exists = _.detect(allTimes.moments,function(item){
+		console.log(JSON.stringify(item));
+		return item.time==curTime;
 		
-			sId = $(".selectedTime:first").attr("id");
-			
-			saveSelectedShapes(sId);
-		}
+		});
 	
-	tm.markNow();
-	installHandlers();
-	$(".selectedTime").removeClass("selectedTime");	
-	selMoment = tm._moments[tm._moments.length - 1];
-	alert(selMoment.id);
-	$("#mom_"+selMoment.id).addClass("selectedTime");
-}
-
-function markStartEnd() {
-	if (self._start !== null) {
-		if ($(".selectedTime").length == 0) {
-			sId = 0;
-		}
-		else {
+	momentShapes = drawer.exportShapes();
+	if (!(_.isUndefined(exists))) {
+		console.log("Is there: "+exists.time);	
 		
-			sId = $(".selectedTime:first").attr("id");
-		}
-		saveSelectedShapes(sId);
+		exists.shapes = JSON.stringify(momentShapes);
+		console.log(exists.shapes);	
+			
 	}
-	tm.markStartEnd();
-	if (self._start !== null) {
-		installHandlers();
-		
-		$(".selectedTime").removeClass("selectedTime");
-		selRange = tm._ranges[tm._ranges.length - 1];
-		$("#" + selRange.id).addClass("selectedTime");
+	else{
+		console.log("not so much");
+		markNow();
+		allTimes.moments[allTimes.moments.length-1].shapes = momentShapes;
 	}
-
+	
 }
 
 var inited = false;
 
 function amReady() {
-	
+		
 	if (inited) return;
 	inited = true;
-	ui = new PlayerUI({container: $("#player-ui-container"), player: p});
-	if (tm === null) {
+	
 		
-		setupTM();
-		installHandlers();
-	}
+	
 	
 }
+function toggleMode(){
+	if (annoMode){
+		annoMode = false;
 
-if (p.play) amReady();
-
+		$(".vd-container").css({"z-index":"9"});
+	}
+	else{
+		annoMode = true;
+	
+		$(".vd-container").css({"z-index":"13"});
+	}
+}
 
 //------image
 function Note(old, pos) {
@@ -303,11 +329,7 @@ $.extend(Note.prototype, {
 });
 
 var drawer;
-/*
-function build(mode, scale, old) {
-	drawer = new VectorDrawer(mode, scale, old, $("#player"), Note);
-}
-*/
+
 function build(mode, scale,old) {
 	oldAudio = {"moments": [], "ranges": []};
 	allShapes =[];
@@ -338,31 +360,40 @@ function build(mode, scale,old) {
 		});
 	}
 	
-	setupTM();
-	
-	drawer = new VectorDrawer(mode, scale, [], $("#player"), Note);
+
+tm = new TimeTable({
+		container: $("#time-marker-container")
+	});
+			/*
+			 * args:
+			 * 	overElm:  Element over which to place the canvas
+			 *  initScale:  initial scale of canvas
+			 */
+	//drawer = new VectorDrawer(mode, scale, [], $(".projekktor").eq(0), Note);
+	projID= $(".projekktor").eq(0).attr("id");
+	overID = "#"+projID+"_media_clickcatcher";
+	$(overID).css({"z-index": "2"})
+	drawer = new VectorDrawer({
+		initScale: scale,
+		overElm: $(overID).eq(0)
+	});
 	installHandlers();
 }
-function setupTM() {
-	
-	if (!ui || oldAudio == null) return;
-		//if (tm === null) {
-		tm = new TimeMarker({
-			container: $("#time-marker-container"),
-			player: p,
-			initState: [oldAudio],
-			formatTime: function(t){
-				return ui.formatTime(t);
-			}
-		});
-	//}
-}
+
 
 function scale(s) {
 	drawer.scale(s);
 }
 
 function mode(m) {
-	drawer.drawMode(m);
+		if (m == "m") {
+			$(".vd-container").css({"z-index":"1"});
+		}
+		else {
+			PInstance[0].playerObject.setPause(true);
+			$(".vd-container").css({"z-index":"3"});
+			drawer.setDrawMode(m);
+		}
+	
 }
 

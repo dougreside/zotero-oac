@@ -19,9 +19,11 @@ function changeNote(obj, isRange, txt, num){
 	newobj.select();
 	
 	$("#editingSpan").parent().next().find("img:first").replaceWith("<img alt='save' src='chrome://zotero-content/skin/annotations/images/annotate-audio-save.png'>");
-	if (drawer) {
-			drawer.disableKeyListener();
-	}
+	//alert("bong");
+	/*if (!(_.isNaN(drawer))) {
+		alert("zing");
+		drawer.disableKeyListener();
+	}*/
 
 
 }
@@ -32,9 +34,11 @@ function recordNote(obj, isRange, txt, num ){
 	});
 	
 	objParent.next().find("img:first").replaceWith("<img alt='edit' src='chrome://zotero-content/skin/annotations/images/annotate-audio-edit.png'>");
-	if (drawer) {
+	//alert("bang");
+	/*if (!(_.isNaN(drawer))) {
+		alert("zing");
 			drawer.enableKeyListener();
-	}
+	}*/
 	objParent.trigger('saveNoteEvent',[isRange,num,txt]);
 	/*
 	txt = content.value;

@@ -173,6 +173,7 @@
 <!ENTITY zotero.annotate.audiotimemarker.toolbar.mark.label "Mark a moment">
 <!ENTITY zotero.annotate.audiotimemarker.toolbar.range.label "Mark a range">
 
+<!ENTITY zotero.annotate.videodrawer.toolbar.movie.label "Restore movie controls">
 <!ENTITY zotero.annotate.videodrawer.toolbar.select.label "Select a shape">
 <!ENTITY zotero.annotate.videodrawer.toolbar.rectangle.label "Draw a rectangle">
 <!ENTITY zotero.annotate.videodrawer.toolbar.ellipse.label "Draw an ellipse">

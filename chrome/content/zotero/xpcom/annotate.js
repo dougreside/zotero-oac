@@ -165,6 +165,7 @@ Zotero.Annotaters = {};
 		},
 		setupCallbacks: function(browserDoc) {
 			const toolCallbacks = {
+				'zotero-annotate-tb-vector-drawer-movie': 'm',
 				'zotero-annotate-tb-vector-drawer-rectangle': 'r',
 				'zotero-annotate-tb-vector-drawer-ellipse': 'e',
 				'zotero-annotate-tb-vector-drawer-polygon': 'p',
@@ -172,6 +173,7 @@ Zotero.Annotaters = {};
 			};
 			var self = this;
 			this._curCallbacks = {};
+		
 			forEachInObj(toolCallbacks, function(mode, elID){
 				var el = browserDoc.getElementById(elID);
 				self._curCallbacks[elID] = function() {
@@ -179,9 +181,10 @@ Zotero.Annotaters = {};
 					self._mode = mode;
 				};
 				el.addEventListener("command", self._curCallbacks[elID], false);
+				
 				if (mode == self._mode) el.checked = true;
 			});
-
+			
 			// TODO: add scaling UI
 		},
 		teardownCallbacks: function(browserDoc) {
@@ -206,37 +209,60 @@ Zotero.Annotaters = {};
 
 	ZATM.annotatesExts = {
 		"mp3": true,
-		"aac": true};
+		"aac": true,
+		"ogg": true};
 	ZATM.toolbarID = "zotero-annotate-tb-audio-time-marker";
 	ZATM.getHTMLString = function (title, zoteroURI, fileURI) {
 		var ios = Cc["@mozilla.org/network/io-service;1"]
 			.getService(Ci.nsIIOService);
 		var cr = Cc["@mozilla.org/chrome/chrome-registry;1"].
 			getService(Ci.nsIChromeRegistry);
-		var flashURI = cr.convertChromeURL(ios.newURI("chrome://zotero-content/content/annotations/AudioPlayer.swf", null, null));
-
+		//var flashURI = cr.convertChromeURL(ios.newURI("chrome://zotero-content/content/annotations/AudioPlayer.swf", null, null));
+		var flashURI = cr.convertChromeURL(ios.newURI("chrome://zotero-content/content/libs/playerMP3.swf", null, null));
+		fileStr = ""+fileURI.toString();
+	
+		var dotIndex = fileStr.length-3;
+		
+		var fileExt = fileStr.substring(dotIndex);
+		
 		return "<html><head><title>" + escapeHTML(title) + "</title>"+
 		"<link rel='stylesheet' type='text/css' href='chrome://zotero-content/skin/annotations/wrapper.css' />"+
 "<link rel='stylesheet' type='text/css' href='chrome://zotero-content/skin/annotations/AudioTimeMarker.css' />"+
+	"<link rel='stylesheet' href='chrome://zotero-content/skin/libs/projekktor/style/projekktor_theme_tll/style.css' type='text/css' media='screen' />"+
 	"<link type='text/css' href='chrome://zotero-content/skin/libs/ui.all-slider.css' rel='stylesheet' /> "+
+	buildScriptDeps({"libs": ["jquery.js","projekktor.js","swfobject.js"]})+
+	"<script language='javascript' type='text/javascript'>"+			
+			
+			" PROJEKKTOR_CONFIG = {playerFlashMP3: '"+
+			escapeHTML(flashURI.spec)+"'};"+
+			
+			"</script>"+
 		"</head><body>\n" +
 			"<div class='zotero'><img src='chrome://zotero-content/skin/annotations/images/zotero_logo.png' class='logo'/></div>"+
 			"<div class='audio-container'>"+
-			"<div id='player-ui-container'></div>"+
+			"<div id='player-ui-container'>"+
+			 "<video class='projekktor' width='500' height='50' src='"+fileURI+"' type='audio/mp3' controls>"+
+				"<source src='"+fileURI+"' type='audio/"+fileExt+"' />"+
+			   "</video>"+
+			"</div>"+
 			"<div id='time-marker-container'></div>"+
 					"<embed src=\"" + escapeHTML(flashURI.spec) + "\"\n" +
-				"FlashVars=\"" + escapeHTML("eid=1&soundURL=" + fileURI) + "\" \n" +
 				"allowscriptaccess=\"always\"\n"  +
-				"id=\"player\" style=\"height: 0; width: 0;\"></embed>\n" +
+				"id=\"player2\" style=\"height: 0; width: 0;\"></embed>\n" +
 				"</div>"+
+				
 				buildScriptDeps({
-					"libs": ["jquery.js", "underscore.js", "jquery.ui.core.js",
+					"libs": [ "underscore.js", "jquery.ui.core.js",
 						"jquery.ui.widget.js", "jquery.ui.mouse.js",
-						"jquery.ui.slider.js"],
+						"jquery.ui.slider.js","projekktorConfig.js"],
 					"annotations": ["PlayerUI.js","TimeMarker.js",
 						"AudioTimeMarker.js", "other.js"]
-				}) + "\n</body></html>";
+				}) +
+				 "\n</body></html>";
 	};
+
+
+
 
 	ZATM.prototype = {
 		shouldSave: function() {
@@ -256,6 +282,7 @@ Zotero.Annotaters = {};
 				};
 				browserDoc.getElementById(elID).addEventListener("command", cb, false);
 			});
+			//done with call backs.
 		},
 		teardownCallbacks: function(browserDoc) {
 			forEachInObj(this._curCallbacks, function(cb, elID){
@@ -286,30 +313,48 @@ Zotero.Annotaters = {};
 			.getService(Ci.nsIIOService);
 		var cr = Cc["@mozilla.org/chrome/chrome-registry;1"].
 			getService(Ci.nsIChromeRegistry);
-		var flashURI = cr.convertChromeURL(ios.newURI("chrome://zotero-content/content/annotations/VideoPlayerMarker.swf", null, null));
-
+		var flashURI = cr.convertChromeURL(ios.newURI("chrome://zotero-content/content/libs/playerMP4.swf", null, null));
+		fileStr = ""+fileURI.toString();
+	
+		var dotIndex = fileStr.length-3;
+		
+		var fileExt = fileStr.substring(dotIndex);
+		
 		return "<html><head><title>" + escapeHTML(title) + "</title>"+
-						"<link rel='stylesheet' type='text/css' href='chrome://zotero-content/skin/libs/ui.core.css' />"+
-				"<link rel='stylesheet' type='text/css' href='chrome://zotero-content/skin/libs/ui.resizable.css' />"+
-		"<link type='text/css' href='chrome://zotero-content/skin/libs/ui.all-slider.css' rel='stylesheet' /> "+
-		"<link rel='stylesheet' type='text/css' href='chrome://zotero-content/skin/annotations/wrapper.css' />"+ 
-		"<link rel='stylesheet' type='text/css' href='chrome://zotero-content/skin/annotations/ImageVectorDrawer.css' />"+ 
-		"<link rel='stylesheet' type='text/css' href='chrome://zotero-content/skin/annotations/VideoMarker.css' />"+
-		 "</head><body>\n" +
-  "<div class='zotero'><img src='chrome://zotero-content/skin/annotations/images/zotero_logo.png' class='logo'/></div>"+
-			"<embed src=\"" + escapeHTML(flashURI.spec) + "\"\n" +
-				"FlashVars=\"" + escapeHTML("eid=1&videoURL=" + fileURI) + "\" \n" +
-				"allowscriptaccess=\"always\" wmode=\"opaque\"\n"  +
-				"id=\"player\" style=\"height: 300; width: 400;\ background=#C1C1C1;\"></embed>\n" +
-			"<div id=\"player-ui-container\"></div>\n" +
-			"<div id=\"time-marker-container\"></div>\n" +
-			buildScriptDeps({
-				"libs": ["jquery.js", "underscore.js","jquery.ui.core.js",
+		"<link rel='stylesheet' type='text/css' href='chrome://zotero-content/skin/annotations/wrapper.css' />"+
+"<link rel='stylesheet' type='text/css' href='chrome://zotero-content/skin/annotations/VideoMarker.css' />"+
+	"<link rel='stylesheet' href='chrome://zotero-content/skin/libs/projekktor/style/projekktor_theme_tll/style.css' type='text/css' media='screen' />"+
+	"<link type='text/css' href='chrome://zotero-content/skin/libs/ui.all-slider.css' rel='stylesheet' /> "+
+	buildScriptDeps({"libs": ["jquery.js","projekktor.js","swfobject.js"]})+
+	"<script language='javascript' type='text/javascript'>"+			
+			
+			" PROJEKKTOR_CONFIG = {playerFlashMP4: '"+
+			escapeHTML(flashURI.spec)+"'};"+
+			
+			"</script>"+
+		"</head><body>\n" +
+			"<div class='zotero'><img src='chrome://zotero-content/skin/annotations/images/zotero_logo.png' class='logo'/></div>"+
+			"<div class='audio-container'>"+
+			"<div id='player-ui-container'>"+
+			 "<video class='projekktor' width='500' height='400' src='"+fileURI+"' controls>"+
+				"<source src='"+fileURI+"' type='video/"+fileExt+"' />"+
+			   "</video>"+
+			"</div>"+
+			"<div id='time-marker-container'></div>"+
+					"<embed src=\"" + escapeHTML(flashURI.spec) + "\"\n" +
+				"allowscriptaccess=\"always\"\n"  +
+				"id=\"player2\" style=\"height: 0; width: 0;\"></embed>\n" +
+				"</div>"+
+				
+				buildScriptDeps({
+					"libs": [ "underscore.js", "jquery.ui.core.js",
 						"jquery.ui.widget.js", "jquery.ui.mouse.js",
-						"jquery.ui.slider.js", "raphael.js",, "jquery.ui.draggable.js",
+						"jquery.ui.slider.js","projekktorConfig.js", "raphael.js", "jquery.ui.draggable.js",
 						"jquery.ui.resizable.js", "jquery.ui.selectable.js", "jquery.ui.position.js"],
-				"annotations": ["PlayerUI.js","other.js", "TimeMarker.js",  "VectorDrawer.js", "VideoDrawerMarker.js"]
-			}) + "\n</script></body></html>";
+					"annotations": ["VectorDrawer.js","PlayerUI.js","TimeTable.js",
+						"VideoDrawerMarker.js", "other.js"]
+				}) +
+				 "\n</body></html>";
 	};
 
 	ZVDM.prototype = {
@@ -319,6 +364,7 @@ Zotero.Annotaters = {};
 		setupCallbacks: function(browserDoc) {
 			var self = this;
 			const drawToolCallbacks = {
+				'zotero-annotate-tb-video-drawer-movie': 'm',
 				'zotero-annotate-tb-video-drawer-rectangle': 'r',
 				'zotero-annotate-tb-video-drawer-ellipse': 'e',
 				'zotero-annotate-tb-video-drawer-polygon': 'p',
@@ -329,6 +375,7 @@ Zotero.Annotaters = {};
 				"zotero-annotate-tb-video-time-marker-range": "markStartEnd"
 			};
 			self._curCallbacks = {};
+				self._mode="m";
 			forEachInObj(drawToolCallbacks, function(mode, elID){
 				var el = browserDoc.getElementById(elID);
 				var cb = self._curCallbacks[elID] = function() {

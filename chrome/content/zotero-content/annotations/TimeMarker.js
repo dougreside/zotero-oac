@@ -202,7 +202,9 @@ jQuery.extend(rootNS.TimeMarker.prototype, {
 			uid = parseInt(self._moments[last].id);
 			uid=uid+1;
 		}
-		self._moments.push(new self._TimeStamp(self._player.getPosition(),null,uid));
+		console.log(PInstance[0].playerObject.getPosition());
+		
+		self._moments.push(new self._TimeStamp(PInstance[0].playerObject.getPosition(),null,uid));
 		
 		self.displayMoments();
 	},
@@ -213,25 +215,26 @@ jQuery.extend(rootNS.TimeMarker.prototype, {
 			uid = self._ranges[self._ranges.length-1].id+1;
 		}
 		if (self._start !== null) {
-			self._ranges.push(new self._TimeRange(self._start,self._player.getPosition(),null,uid));
+			self._ranges.push(new self._TimeRange(self._start,PInstance[0].playerObject.getPosition(),null,uid));
 			self.displayRanges();
 			self._start = null;
 		} else {
-			self._start = self._player.getPosition();
+			self._start = PInstance[0].playerObject.getPosition();
 		}
 	},
 	displayMoments: function() {
 		var output = "";
 		for (var i=0;i<this._moments.length;i++){
-			output += "<tr id='mom_"+this._moments[i].id+"' class='time-marker-moment'><td>"+this._moments[i]+"</td><td><span onclick='changeNote(this,false,\""+this._moments[i].note+"\","+this._moments[i].id+")'>"+this._moments[i].note+"</span></td><td><span class='editButtonSpan' onclick='changeNote(this.parentNode.previousSibling.firstChild,false,\""+this._moments[i].note+"\","+this._moments[i].id+")'><img src='chrome://zotero-content/skin/annotations/images/annotate-audio-edit.png' alt='edit' /></a></td><td><span class='deleteButtonSpan' onclick='deleteNote(this,false,"+this._moments[i].id+")'><img src='chrome://zotero-content/skin/annotations/images/annotate-audio-delete.png' alt='delete' /></a></td></tr>";
+			output += "<tr id='mom_"+this._moments[i].id+"' class='time-marker-moment'><td><span class='startTime'>"+this._moments[i]+"</span></td><td><span onclick='changeNote(this,false,\""+this._moments[i].note+"\","+this._moments[i].id+")'>"+this._moments[i].note+"</span></td><td><span class='editButtonSpan' onclick='changeNote(this.parentNode.previousSibling.firstChild,false,\""+this._moments[i].note+"\","+this._moments[i].id+")'><img src='chrome://zotero-content/skin/annotations/images/annotate-audio-edit.png' alt='edit' /></a></td><td><span class='deleteButtonSpan' onclick='deleteNote(this,false,"+this._moments[i].id+")'><img src='chrome://zotero-content/skin/annotations/images/annotate-audio-delete.png' alt='delete' /></a></td></tr>";
 		}
 
 		this._momentList.html(output);
+		$(".timeStart").click(function(e){alert('quack');});
 	},
 	displayRanges: function() {
 		var output="";
 				for (var i=0;i<this._ranges.length;i++){
-			output += "<tr id='rng_"+this._ranges[i].id+"' class='time-marker-range'><td>"+this._ranges[i]+"</td><td><span onclick='changeNote(this,true,\""+this._ranges[i].note+"\","+this._ranges[i].id+")'>"+this._ranges[i].note+"</span></td><td><span class='editButtonSpan' onclick='changeNote(this.parentNode.previousSibling.firstChild,true,\""+this._moments[i].note+"\","+this._moments[i].id+")' href='#'><img src='chrome://zotero-content/skin/annotations/images/annotate-audio-edit.png' alt='edit' /></a></td><td><span class='deleteButtonSpan' onclick='deleteNote(this,true,"+this._ranges[i].id+")'><img src='chrome://zotero-content/skin/annotations/images/annotate-audio-delete.png' alt='delete' /></a></td></tr>";
+			output += "<tr id='rng_"+this._ranges[i].id+"' class='time-marker-range'><td class='timeStart'>"+this._ranges[i]+"</td><td><span onclick='changeNote(this,true,\""+this._ranges[i].note+"\","+this._ranges[i].id+")'>"+this._ranges[i].note+"</span></td><td><span class='editButtonSpan' onclick='changeNote(this.parentNode.previousSibling.firstChild,true,\""+this._moments[i].note+"\","+this._moments[i].id+")' href='#'><img src='chrome://zotero-content/skin/annotations/images/annotate-audio-edit.png' alt='edit' /></a></td><td><span class='deleteButtonSpan' onclick='deleteNote(this,true,"+this._ranges[i].id+")'><img src='chrome://zotero-content/skin/annotations/images/annotate-audio-delete.png' alt='delete' /></a></td></tr>";
 		}
 		this._rangeList.html(output);
 	}

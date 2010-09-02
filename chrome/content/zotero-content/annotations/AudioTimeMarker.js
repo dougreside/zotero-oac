@@ -1,19 +1,26 @@
-var p = document.getElementById('player');
+
 var tm = null, ui = null, oldAnnos = null;
 
+
 function build(old) {
-	
+		
+		
 	oldAnnos = old;
+	p = PInstance[0].playerObject;
 	setupTM();
+
+	
 }
 
 function setupTM() {
-	if (tm || !ui || oldAnnos === null) return;
+	//if (tm || !ui || oldAnnos === null) return;
+	if (tm || oldAnnos === null) return;
+	
 	tm = new TimeMarker({
 		container: $("#time-marker-container"),
 		player: p,
 		initState: oldAnnos,
-		formatTime: function (t) {return ui.formatTime(t);}
+		//formatTime: function (t) {return ui.formatTime(t);}
 	});
 }
 
@@ -32,11 +39,14 @@ function markStartEnd() {
 var inited = false;
 
 function amReady() {
+	p = PInstance[0].playerObject;
 	if (inited) return;
 	inited = true;
-
-	ui = new PlayerUI({container: $("#player-ui-container"), player: p});
+	//ui = new PlayerUI({container: $("#player-ui-container"), player: p});
 	setupTM();
+	
+	
 }
 
-if (p.play) amReady();
+
+

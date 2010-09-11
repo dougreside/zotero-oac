@@ -203,7 +203,7 @@ Zotero.Annotaters = {};
 	var ZATM = Zotero.Annotaters.AudioTimeMarker = function(contentDoc, oldAnnos) {
 		this._contentDoc = contentDoc;
 		this._curCallbacks = {};
-
+		
 		contentDoc.defaultView.wrappedJSObject.build(oldAnnos);
 	};
 
@@ -241,7 +241,7 @@ Zotero.Annotaters = {};
 			"<div class='zotero'><img src='chrome://zotero-content/skin/annotations/images/zotero_logo.png' class='logo'/></div>"+
 			"<div class='audio-container'>"+
 			"<div id='player-ui-container'>"+
-			 "<video class='projekktor' width='500' height='50' src='"+fileURI+"' type='audio/mp3' controls>"+
+			 "<video class='projekktor' width='500' height='80' src='"+fileURI+"' type='audio/mp3' controls>"+
 				"<source src='"+fileURI+"' type='audio/"+fileExt+"' />"+
 			   "</video>"+
 			"</div>"+
@@ -255,7 +255,7 @@ Zotero.Annotaters = {};
 					"libs": [ "underscore.js", "jquery.ui.core.js",
 						"jquery.ui.widget.js", "jquery.ui.mouse.js",
 						"jquery.ui.slider.js","projekktorConfig.js"],
-					"annotations": ["PlayerUI.js","TimeMarker.js",
+					"annotations": ["PlayerUI.js","TimeTable.js",
 						"AudioTimeMarker.js", "other.js"]
 				}) +
 				 "\n</body></html>";
@@ -266,8 +266,10 @@ Zotero.Annotaters = {};
 
 	ZATM.prototype = {
 		shouldSave: function() {
+			
 			var ret = JSON.parse(this._contentDoc.defaultView.wrappedJSObject.savable());
 			return ret;
+		return;
 		},
 		setupCallbacks: function(browserDoc) {
 			var self = this;

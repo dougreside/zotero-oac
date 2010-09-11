@@ -18,7 +18,7 @@ function markNow() {
 
 		newMom = allTimes.moments.push({"time": pos, "shapes":[], "note":"Click here to add a note."});
 		tm.addRow(pos);
-	installHandlers();
+		installHandlers();
 	
 	
 	}
@@ -79,42 +79,16 @@ $(document).bind("mediaTimeChange",function(e,time){
 });
 function savable() {
 	
-	//  alltimes below is an array of objects each 
-	//  containing moments and ranges.  The code
-	//  must reflect this.
-	if ($(".selectedTime").length==0) {
-		sId = 0;
-		}
-		else {
-		
-		sId = $(".selectedTime:first").attr("id");
-		}
-	saveSelectedShapes();
+
+	allNotes = $(".momNote");
+
+	$.each($(allNotes),function(i,mN){
+		allTimes.moments[i].note = $(mN).html();
 	
-	timesArray = tm.savable();
-	
-	times = timesArray[0];
-	moments = times.moments;
-	ranges = times.ranges;
-	if (moments.length > 0) {
-		_.each(moments, function(m){
-			m.con = "moment";
-			allShapes.push(m);
-			
-			
-		});
-	}
-	if (ranges.length > 0) {
-		_.each(ranges, function(r){
-			r.con = "range";
-			allShapes.push(r);
-			
-			
-			
-		});
-	}
-	
-	return JSON.stringify(allShapes);
+	});
+	allTimesStr = JSON.stringify(allTimes.moments);
+
+	return allTimesStr;
 	
 	
 }
@@ -200,10 +174,10 @@ function installHandlers(){
 		showShapes(time);
 	});
 	
+	
 }
 
 function clearShapes(){
-	console.log("Clear Shapes");
 	drawer.clearShapes();
 }	
 
@@ -221,7 +195,7 @@ function showShapes(tId){
 	
 }
 function saveSelectedShapes(){
-	console.log("Saving Current time: "+curTime);
+
 	var exists = _.detect(allTimes.moments,function(item){
 		console.log(JSON.stringify(item));
 		return item.time==curTime;
@@ -237,7 +211,7 @@ function saveSelectedShapes(){
 			
 	}
 	else{
-		console.log("not so much");
+
 		markNow();
 		allTimes.moments[allTimes.moments.length-1].shapes = momentShapes;
 	}
@@ -329,58 +303,6 @@ $.extend(Note.prototype, {
 });
 
 var drawer;
-
-function build(mode, scale,old) {
-	oldAudio = {"moments": [], "ranges": []};
-	allShapes =[];
-	links = [];
-	if (old) {
-		_.each(old,function(o){
-			 if (o) {
-			 	if (o.con == "moment") {
-			 		oldAudio.moments.push(o);
-			 	}
-			 	else 
-			 		if (o.con == "range") {
-			 			oldAudio.ranges.push(o);
-			 		}
-			 		else {
-						
-			 		   if (o.scale) {
-				        
-					   	allShapes.push(o);
-					   }
-			 		//throw ("VideoDrawerMarker load error: Should not be reached.");
-						}
-				}
-				else {
-				//throw ("VideoDrawerMarker build error: Should not be reached.");
-				}
-			 
-		});
-	}
-	
-
-tm = new TimeTable({
-		container: $("#time-marker-container")
-	});
-			/*
-			 * args:
-			 * 	overElm:  Element over which to place the canvas
-			 *  initScale:  initial scale of canvas
-			 */
-	//drawer = new VectorDrawer(mode, scale, [], $(".projekktor").eq(0), Note);
-	projID= $(".projekktor").eq(0).attr("id");
-	overID = "#"+projID+"_media_clickcatcher";
-	$(overID).css({"z-index": "2"})
-	drawer = new VectorDrawer({
-		initScale: scale,
-		overElm: $(overID).eq(0)
-	});
-	installHandlers();
-}
-
-
 function scale(s) {
 	drawer.scale(s);
 }
@@ -396,4 +318,55 @@ function mode(m) {
 		}
 	
 }
+function build(mode, scale,old) {
+	
+	self = this;
+	links = [];
+	tm = new TimeTable({
+		container: $("#time-marker-container")
+	});
+	projID= $(".projekktor").eq(0).attr("id");
+	overID = "#"+projID+"_media_clickcatcher";
+	$(overID).css({"z-index": "2"})
+	drawer = new VectorDrawer({
+		initScale: scale,
+		overElm: $(overID).eq(0)
+	});
+	$("body").eq(0).unbind("rowDeleted");
+	$("body").eq(0).bind("rowDeleted",function(e,mId){
+		allTimes.moments.splice(mId,1);	
+	});
+	$("body").eq(0).unbind("unassignedClick");
+	$("body").eq(0).bind("unassignedClick",function(e){
+		$(".vd-container").css({"z-index":"1"});
+		drawer.setDrawMode("m");
+	});
+	if (old) {
+		
+		
+		_.each(old,function(o){
+			 if (o) {
+
+				allTimes.moments.push(o);	
+				tm.importRow(o);
+				
+				installHandlers();
+				} 
+		});
+	}
+	
+
+
+			/*
+			 * args:
+			 * 	overElm:  Element over which to place the canvas
+			 *  initScale:  initial scale of canvas
+			 */
+	//drawer = new VectorDrawer(mode, scale, [], $(".projekktor").eq(0), Note);
+	
+	installHandlers();
+}
+
+
+
 

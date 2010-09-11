@@ -315,6 +315,7 @@ var Zotero_Browser = new function() {
 					tab.page.annotations = new annotaterClass(doc, oldAnnos);
 					var saveAnnotations = function() {
 											var objs = tab.page.annotations.shouldSave();
+											
 											try {
 												Zotero.DB.beginTransaction();
 

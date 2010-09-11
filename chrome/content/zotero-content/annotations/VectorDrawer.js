@@ -1012,7 +1012,8 @@
 					self._obj = targetObj;
 						}
                  } else {
-                     throw "should not be reached";
+                     $("body").eq(0).trigger("unassignedClick");
+					 
                  }
              }).mouseup(function (e) {
 	//At mouseup, that's when the user has finished drawing a shape (Click and Drag and Done)

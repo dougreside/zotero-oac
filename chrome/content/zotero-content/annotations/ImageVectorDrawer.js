@@ -55,7 +55,7 @@ $.extend(Note.prototype, {
 var drawer;
 function build(mode, scale, old) {
 	
-	drawer = new VectorDrawer(mode, scale, old, $("#to-mark"), Note);
+	drawer = new VectorDrawer({initScale: scale, overElm: $("#to-mark")});
 }
 
 function savable() {

@@ -61,6 +61,7 @@ div.player-ui-pause, div.player-ui-play {
 /* time-marker-container styles --------- */
 table {
 	border-collapse:collapse;
+	font-size:90%;
 }
 table,th, td {
 	border: 1px solid #a8a8a8;
@@ -95,4 +96,12 @@ td {
 }
 .deleteButtonSpan{
 	cursor: pointer;
+}
+#time-marker-container {
+	padding-left:10px;
+	max-width:400px;
+	float: left;
+}
+#player-ui-container{
+   float:left;
 }

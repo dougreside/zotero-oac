@@ -40,3 +40,6 @@ body {
 .logo {
 	padding:5px 0 0 10px;
 }
+.selectedTime {
+	background-color: cyan;
+}

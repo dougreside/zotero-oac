@@ -56,10 +56,11 @@ var drawer;
 function build(mode, scale, old) {
 	
 	drawer = new VectorDrawer({initScale: scale, overElm: $("#to-mark")});
+	drawer.importShapes(old);
 }
 
 function savable() {
-	return JSON.stringify(drawer.savable());
+	return JSON.stringify(drawer.exportShapes());
 }
 
 function scale(s) {
@@ -67,5 +68,5 @@ function scale(s) {
 }
 
 function mode(m) {
-	drawer.drawMode(m);
+	drawer.setDrawMode(m);
 }

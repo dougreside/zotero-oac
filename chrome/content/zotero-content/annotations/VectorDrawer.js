@@ -432,10 +432,11 @@
 		// See exportShapes docs for more info
 		importShapes: function(shapeStr){
 			var self=this;
+		
 			if (shapeStr.length > 0) {
 			
 			
-				shapes = JSON.parse(shapeStr);
+				shapes = shapeStr;
 				for (var i = 0; i < shapes.length; i++) {
 					var s = shapes[i];
 					var type = s.type;

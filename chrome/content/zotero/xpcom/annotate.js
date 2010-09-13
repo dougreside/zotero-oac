@@ -165,7 +165,6 @@ Zotero.Annotaters = {};
 		},
 		setupCallbacks: function(browserDoc) {
 			const toolCallbacks = {
-				'zotero-annotate-tb-vector-drawer-movie': 'm',
 				'zotero-annotate-tb-vector-drawer-rectangle': 'r',
 				'zotero-annotate-tb-vector-drawer-ellipse': 'e',
 				'zotero-annotate-tb-vector-drawer-polygon': 'p',

@@ -379,6 +379,15 @@
 	list-style-image: url('chrome://zotero/skin/annotate-drawer-select.png');
 }
 
+#zotero-annotate-tb-vector-drawer-zoomIn
+{
+	list-style-image: url('chrome://zotero/skin/annotate-drawer-select.png');
+}
+#zotero-annotate-tb-vector-drawer-zoomOut
+{
+	list-style-image: url('chrome://zotero/skin/annotate-drawer-select.png');
+}
+
 #zotero-annotate-tb-video-drawer-movie
 {
 	list-style-image: url('chrome://zotero/skin/annotate-vector-drawer-edit.png');

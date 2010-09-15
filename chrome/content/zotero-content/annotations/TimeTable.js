@@ -29,6 +29,10 @@ rootNS.TimeTable = function (opts) {
 };
 
 jQuery.extend(rootNS.TimeTable.prototype, {
+	addShape: function(shapeJSON){
+		shapeObj = JSON.parse(shapeJSON);
+		
+	},
 	addRow: function(mom){
 		self=this;
 		

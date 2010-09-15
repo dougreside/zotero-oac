@@ -1,3 +1,33 @@
+#shape-marker-container {
+	padding-left:10px;
+	max-width:400px;
+	float: left;
+}
+.leftColumn{
+	float:left;
+	width:610px;
+	height:550px;
+}
+
+.imgContainer{
+   float:left;
+   width:600px;
+   height: 540px;
+
+}
+img#to-mark{
+  width:400px;
+}
+#imgSpace{
+
+	position: absolute;
+	   overflow:auto;
+}
+.vd-container{
+	left:0px;
+	top:0px;
+}
+
 .note-container {
 	position: absolute;
 }

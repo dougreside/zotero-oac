@@ -58,22 +58,7 @@ div.player-ui-pause, div.player-ui-play {
 #player-ui-container div.player-ui-volcontrol, #player-ui-container div.player-ui-seekcontrol {
 	margin-bottom:3px;
 }
-/* time-marker-container styles --------- */
-table {
-	border-collapse:collapse;
-	font-size:90%;
-}
-table,th, td {
-	border: 1px solid #a8a8a8;
-}
-th {
-	height:20px;
-	padding:2px 4px;
-	background:url('images/annotate-audio-songnamebkgd.gif') repeat-x;
-}
-td {
-	padding:2px 4px;
-}
+
 /* misc styles --------------------------- */
 #player { /* hide the player */
 	height: 0;

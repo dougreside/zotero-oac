@@ -40,6 +40,22 @@ body {
 .logo {
 	padding:5px 0 0 10px;
 }
-.selectedTime {
+.selectedRow {
 	background-color: cyan;
+}
+/* time-marker-container styles --------- */
+table {
+	border-collapse:collapse;
+	font-size:90%;
+}
+table,th, td {
+	border: 1px solid #a8a8a8;
+}
+th {
+	height:20px;
+	padding:2px 4px;
+	background:url('images/annotate-audio-songnamebkgd.gif') repeat-x;
+}
+td {
+	padding:2px 4px;
 }

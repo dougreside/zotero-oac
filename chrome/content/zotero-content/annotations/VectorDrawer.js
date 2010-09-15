@@ -469,6 +469,7 @@
 							else {
 								throw "Unrecognized shape from import";
 							}
+					$("body:first").trigger("shapeImported",[s]);		
 					if (s.color) {
 						this._activeShapes[s.id].attr("stroke", s.color);
 					}
@@ -522,6 +523,12 @@
 				JSONoutput.push(thisShape);
 			});		 
 			return JSONoutput;		
+		},
+		changeColor: function(id,color){
+			if(this._activeShapes[id]){
+				this._activeShapes[id].attr("stroke",color);
+				
+			}
 		},
 		// Delete a shape, must be in the activeShapes
 		// id : {String} unique id of shape to delete
@@ -858,8 +865,8 @@
 					var bb = targetObj.getBBox();
 					var bbH = parseInt(bb.height,10);
 					var bbW = parseInt(bb.width,10);
-					var bbL = parseInt(bb.x,10);
-					var bbT = parseInt(bb.y,10);
+					var bbL = parseFloat(bb.x);
+					var bbT = parseFloat(bb.y);
 					
 			
 					//FOR TILE: container of entire canvas is the raphael div - id: raphael - OLD
@@ -882,7 +889,7 @@
 					if (self._obj){
 						self._tarObj = self._obj;
 					}
-					
+					$("#selBB").trigger("shapeSelected");
 					$("#selBB").draggable({
 						containment: self._cont,
 						start: function(e,ui){

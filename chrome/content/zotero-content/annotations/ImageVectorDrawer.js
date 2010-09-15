@@ -53,20 +53,108 @@ $.extend(Note.prototype, {
 });
 
 var drawer;
+var noteArray=[];
+var selShape = "";
 function build(mode, scale, old) {
 	
-	drawer = new VectorDrawer({initScale: scale, overElm: $("#to-mark")});
-	drawer.importShapes(old);
-}
+	drawer = new VectorDrawer({initScale: scale, overElm: $("#imgContainer")});
+	drawer.setDrawMode("s");
+	drawer.setPenColor("#00FF00");
 
+		sm = new itemTable({
+			"container": "#shape-marker-container"
+		});
+		$("body").eq(0).bind("shapeImported",function(e,obj){
+		
+		noteObj = {"id": obj.id, "name": obj.type, "note":obj.note};
+		sm.importRow(noteObj);
+	});
+	if (old) {
+		drawer.importShapes(old);
+		
+	}
+
+	$("body").eq(0).bind("shapeSelected",function(){
+		showNote($("#selBB"));	
+	});
+	$("body").eq(0).bind("shapeDrawn",function(e,obj){
+		addShape(obj);	
+	});
+	$("body").eq(0).bind("itemSelect",function(e,shapeInfo){
+		drawer.changeColor(selShape,"00FF00");
+		selShape=shapeInfo;
+		drawer.changeColor(shapeInfo,"FF0000");
+	});
+	$("body").eq(0).bind("rowDeleted",function(e,shapeInfo,rId){
+		var deadShape = rId.substring(8);
+		drawer.deleteShape(deadShape);
+
+	});
+	$("body").eq(0).bind("noteChanged",function(e,rId,noteText){
+		var nId = rId.substring(8);
+		thisNote = _.detect(noteArray,function(o){
+			return (o.id == nId);
+		});
+		if (thisNote){
+			
+			thisNote.note = noteText;
+		}
+		else{
+			noteArray.push({
+				"id": rId,
+				"note": noteText
+			});
+		}
+	});
+}
+function addShape(obj){
+	alert(JSON.stringify(obj));
+	var rowObj = {"id":obj.id,"name":obj.type}
+	sm.addRow(rowObj);
+	
+}
+function showNote(selBB){
+	var top = $(selBB).css("top");
+	$(selBB).css({"top":"cyan"});
+}
 function savable() {
-	return JSON.stringify(drawer.exportShapes());
+	response = drawer.exportShapes();
+	for (o in response){
+	
+		for (i = 0; i < noteArray.length; i++) {
+			
+	
+			if (noteArray[i].id.substring(8) == response[o].id) {
+				
+				response[o]["note"] = noteArray[i].note;
+			}
+		}
+	}
+	return JSON.stringify(response);
 }
+function zoomIn(){
+		$(".vd-container").width(1.25*parseFloat($(".vd-container").width()));
+		$(".vd-container").height(1.25*parseFloat($(".vd-container").height()));
+		$("#to-mark").css("width",(1.25*parseFloat($("#to-mark").width()))+'px');
+	
+		
+		//zooming in
+		drawer.scale(1.25); 
 
+}
+function zoomOut(){
+			$(".vd-container").width(.75*parseFloat($(".vd-container").width()));
+		$(".vd-container").height(.75*parseFloat($(".vd-container").height()));
+		$("#to-mark").css("width",(.75*parseFloat($("#to-mark").width()))+'px');
+
+		//zooming in
+		drawer.scale(.75); 
+}
 function scale(s) {
 	drawer.scale(s);
 }
 
 function mode(m) {
+	
 	drawer.setDrawMode(m);
 }

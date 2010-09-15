@@ -144,13 +144,13 @@ Zotero.Annotaters = {};
 				"<link rel=\"stylesheet\" type=\"text/css\" href=\"chrome://zotero-content/skin/annotations/ImageVectorDrawer.css\" />\n" +
 			"</head><body>\n" +
 			"<div class='zotero'><img src='chrome://zotero-content/skin/annotations/images/zotero_logo.png' class='logo'/></div>"+
-			"<img id=\"to-mark\" src=\"" + escapeHTML(zoteroURI) + "\" />\n" +
+			"<div class='leftColumn'><div class='imgSpace' id='imgSpace'><div id='imgContainer' class='imgContainer'><img id=\"to-mark\" src=\"" + escapeHTML(zoteroURI) + "\" /></div></div></div><div id='shape-marker-container'></div>"+
 			buildScriptDeps({
 				"libs": ["jquery.js", "raphael.js", "underscore.js", ,"jquery.ui.core.js",
 						"jquery.ui.widget.js", "jquery.ui.mouse.js",
 						"jquery.ui.slider.js", "jquery.ui.draggable.js",
 						"jquery.ui.resizable.js", "jquery.ui.selectable.js", "jquery.ui.position.js"],
-				"annotations": ["VectorDrawer.js", "ImageVectorDrawer.js"]
+				"annotations": ["ShapeTable.js","VectorDrawer.js", "ImageVectorDrawer.js"]
 			}) +
 			"\n</body></html>";
 	};
@@ -185,6 +185,23 @@ Zotero.Annotaters = {};
 			});
 			
 			// TODO: add scaling UI
+			
+			
+			const zoomCallbacks = {
+				"zotero-annotate-tb-vector-drawer-zoomIn": "zoomIn",
+				"zotero-annotate-tb-vector-drawer-zoomOut": "zoomOut"
+			};
+		
+			forEachInObj(zoomCallbacks, function(funcName, elID){
+				var cb = self._curCallbacks[elID] = function () {
+					self._contentDoc.defaultView.wrappedJSObject[funcName]();
+				};
+				browserDoc.getElementById(elID).addEventListener("command", cb, false);
+			});
+			//done with call backs.
+			
+			
+			
 		},
 		teardownCallbacks: function(browserDoc) {
 			var self = this;

@@ -43,6 +43,10 @@ body {
 .selectedRow {
 	background-color: cyan;
 }
+.selectedChild {
+	background-color: #DDDD00;
+}
+
 /* time-marker-container styles --------- */
 table {
 	border-collapse:collapse;

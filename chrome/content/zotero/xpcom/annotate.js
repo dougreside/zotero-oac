@@ -150,7 +150,7 @@ Zotero.Annotaters = {};
 						"jquery.ui.widget.js", "jquery.ui.mouse.js",
 						"jquery.ui.slider.js", "jquery.ui.draggable.js",
 						"jquery.ui.resizable.js", "jquery.ui.selectable.js", "jquery.ui.position.js"],
-				"annotations": ["ShapeTable.js","VectorDrawer.js", "ImageVectorDrawer.js"]
+				"annotations": ["NoteTable.js","VectorDrawer.js", "ImageVectorDrawer.js"]
 			}) +
 			"\n</body></html>";
 	};
@@ -369,7 +369,7 @@ Zotero.Annotaters = {};
 						"jquery.ui.widget.js", "jquery.ui.mouse.js",
 						"jquery.ui.slider.js","projekktorConfig.js", "raphael.js", "jquery.ui.draggable.js",
 						"jquery.ui.resizable.js", "jquery.ui.selectable.js", "jquery.ui.position.js"],
-					"annotations": ["VectorDrawer.js","PlayerUI.js","TimeTable.js",
+					"annotations": ["VectorDrawer.js","PlayerUI.js","NoteTable.js",
 						"VideoDrawerMarker.js", "other.js"]
 				}) +
 				 "\n</body></html>";

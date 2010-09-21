@@ -8,7 +8,7 @@ function build(old) {
 	oldAnnos = old;
 	
 	p = PInstance[0].playerObject;
-	//setupTM();
+
 tm = new TimeTable({
 		container: $("#time-marker-container")
 	});
@@ -75,8 +75,7 @@ function amReady() {
 	p = PInstance[0].playerObject;
 	if (inited) return;
 	inited = true;
-	//ui = new PlayerUI({container: $("#player-ui-container"), player: p});
-	//setupTM();
+
 	
 	
 }

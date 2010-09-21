@@ -432,7 +432,7 @@
 		// See exportShapes docs for more info
 		importShapes: function(shapeStr){
 			var self=this;
-		
+			
 			if (shapeStr.length > 0) {
 			
 			
@@ -863,8 +863,8 @@
 					//var bb = targetObj.cur.getBBox();
 					//var bb = $("#"+targetObj.id+":first")[0].getBBox();
 					var bb = targetObj.getBBox();
-					var bbH = parseInt(bb.height,10);
-					var bbW = parseInt(bb.width,10);
+					var bbH = parseFloat(bb.height);
+					var bbW = parseFloat(bb.width);
 					var bbL = parseFloat(bb.x);
 					var bbT = parseFloat(bb.y);
 					

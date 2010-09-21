@@ -99,9 +99,9 @@ jQuery.extend(rootNS.TimeTable.prototype, {
 	selectRow: function(mom){
 		self =this;
 		var momName = "#mom"+mom;
-		$(".selectedTime").removeClass("selectedTime");
+		$(".selectedRow").removeClass("selectedRow");
 		//$(momName).css({"background-color":"cyan"});
-		$(momName).addClass("selectedTime");
+		$(momName).addClass("selectedRow");
 
 		var sendMom = mom.replace(/_/g,".")
 		$(momName).trigger("timeSelect",[sendMom]);

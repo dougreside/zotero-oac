@@ -271,7 +271,7 @@ Zotero.Annotaters = {};
 					"libs": [ "underscore.js", "jquery.ui.core.js",
 						"jquery.ui.widget.js", "jquery.ui.mouse.js",
 						"jquery.ui.slider.js","projekktorConfig.js"],
-					"annotations": ["PlayerUI.js","TimeTable.js",
+					"annotations": ["PlayerUI.js","NoteTable.js",
 						"AudioTimeMarker.js", "other.js"]
 				}) +
 				 "\n</body></html>";
@@ -291,7 +291,7 @@ Zotero.Annotaters = {};
 			var self = this;
 			const toolCallbacks = {
 				"zotero-annotate-tb-audio-time-marker-mark": "markNow",
-				"zotero-annotate-tb-audio-time-marker-range": "markStartEnd"
+				
 			};
 			self._curCallbacks = {};
 			forEachInObj(toolCallbacks, function(funcName, elID){

@@ -2,46 +2,62 @@
 var tm = null, ui = null, oldAnnos = null;
 
 var allTimes ={"moments":[]};
-function build(old) {
-	
-		
+function build(old){
+
+
 	oldAnnos = old;
 	
 	p = PInstance[0].playerObject;
-
-tm = new TimeTable({
-		container: $("#time-marker-container")
+	
+	tm = new itemTable({
+		"tableName": "audio",
+		"title": "Timestamps",
+		"container": $("#time-marker-container"),
+		"rowLabel": "Time",
+		"noteLabel": "Note",
+		"delButton": "Delete",
+		"saveButton": "Save"
+	
 	});
-	if (old.length>0) {
+	if (old.length > 0) {
 		for (i = 0; i < old.length; i++) {
 			tm.importRow(old[i]);
+			allTimes.moments.push(old[i]);
 		}
 	}
-	$("body").eq(0).bind("timeSelect",function(e,time){
+	$("body").eq(0).bind("itemSelect", function(e, selRowId){
+	
+		time = selRowId.substring(selRowId.lastIndexOf("_") + 1);
 		
-	
-		PInstance[0].playerObject.setPause(true);
-		PInstance[0].playerObject.setSeek(time);
-		PInstance[0].playerObject.setPlay(true);
+		
+		var t = time.replace(/-/g, ".");
+		
+		t = parseFloat(t);
+		
+		PInstance[0].pause();
+		PInstance[0].playerObject.setSeek(t);
+		PInstance[0].play();
 	});
 	
-}
+	$("body").eq(0).bind("noteChanged", function(e, selRowId, noteText){
+		nId = selRowId.substring(selRowId.lastIndexOf("_") + 1);
 
-function setupTM() {
-	//if (tm || !ui || oldAnnos === null) return;
-	if (tm || oldAnnos === null) return;
-	
-	tm = new TimeMarker({
-		container: $("#time-marker-container"),
-		player: p,
-		initState: oldAnnos,
-		//formatTime: function (t) {return ui.formatTime(t);}
+		thisNote = _.detect(allTimes.moments, function(o){
+			return (o.id == nId);
+		});
+		if (thisNote) {
+			thisNote.note = noteText;			
+		}
+		
 	});
+	
+	
+	
 }
 
 function savable() {
 
-	allNotes = $(".momNote");
+	allNotes = $(".itemNote");
 
 	$.each($(allNotes),function(i,mN){
 		allTimes.moments[i].note = $(mN).html();
@@ -52,22 +68,27 @@ function savable() {
 }
 
 function markNow() {
-	var pos = PInstance[0].playerObject.getPosition();
-	$(".selectedTime").removeClass("selectedTime");	
-
-	if (!(allTimes.moments["pos"])){
-
-		newMom = allTimes.moments.push({"time": pos, "note":"Click here to add a note."});
-		tm.addRow(pos);
+	//PInstance[0].playerObject.setPause(true);
+	var pos = PInstance[0].playerObject.getPosition()+"";
 	
+	pid=pos.replace(/\./g,"-");
+	
+	$(".selectedTime").removeClass("selectedTime");	
+	if (!(allTimes.moments["pos"])){
+		
+		newMom = allTimes.moments.push({"name": pos, "id": pid, "note":"Click here to add a note."});
+		tm.addRow({
+			"name": pos,
+			"id": pid
+		});
+		
 	
 	
 	}
+	return;
 }
 
-function markStartEnd() {
-	tm.markStartEnd();
-}
+
 
 var inited = false;
 

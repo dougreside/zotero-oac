@@ -57,8 +57,8 @@ jQuery.extend(rootNS.itemTable.prototype, {
 		$("#itemTable_"+self.name).append("<tr id='itemRow_"+itemId+"'><td id='itemTD_"+itemId+"' class='itemTD'>"+itemName+"</td><td class='itemNote' id='note_"+itemId+"_"+lastNum+"'>Click here to add a note</td><td class='saveButton_"+self.name+"'>save</td><td class='deleteButton_"+self.name+"'>delete</td></tr>");				
 		$("#itemTD_"+itemId).unbind("click");
 		$("#itemTD_"+itemId).click(function(e){
-	
-		self.selectRow($(this).parent().attr("id").substring(8));
+		
+		self.selectRow($(this).parent().attr("id").substring(self.name));
 		});
 		$("#note_"+itemId+"_"+lastNum).unbind("click");
 		$("#note_"+itemId+"_"+lastNum).click(function(e){
@@ -80,29 +80,21 @@ jQuery.extend(rootNS.itemTable.prototype, {
 		};
 		
 	},
-	deleteRow: function(item){
-	
+	deleteRow: function(item){	
 		rId = item.parent().attr("id");	
-		//mNum = parseInt(mId.split("_")[1]);
-		item.parent().remove();
-		/*var allTR = $("#itemTable_"+self.name).find("tr");
-		$.each(allTR,function(key,value){
-			$(value).find('td').eq(1).attr("id","note_"+key);
-		});*/
+		item.parent().remove();		
 		$("body").eq(0).trigger("rowDeleted",[rId]);
 	},
 	importRow:function(o){
 		var self=this;
 		this.addRow(o);
-		//alert(o.note);
-		$("#itemTable_"+self.name).find("tr:last").find("td.itemNote").eq(0).text(o.note);
-		
+		$("#itemTable_"+self.name).find("tr:last").find("td.itemNote").eq(0).text(o.note);		
 	},
 	selectRow: function(itemRow){
 		
 		var self =this;
-		var itemName = "#itemRow_" + itemRow;
-		
+
+		var itemName = "#"+itemRow;
 		if (!(self.name.indexOf("childTable") == 0)) {
 			
 			$(".selectedRow").removeClass("selectedRow");

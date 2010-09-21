@@ -304,7 +304,7 @@ function build(mode, scale,old) {
 	
 		curTime = PInstance[0].playerObject.getPosition();
 	});	
-	
+	PInstance[0].addListener('testcard', function(){ location.reload(true)});
 	$("body").eq(0).unbind("shapeChanged");
 	$("body").eq(0).bind("shapeChanged",function(e,shape){
 		saveSelectedShapes();
@@ -407,7 +407,7 @@ function build(mode, scale,old) {
 
 	});
 	PInstance[0].addListener("seek",function(e){
-		console.log("SEEK");
+	
 		//saveSelectedShapes();
 		sId = PInstance[0].playerObject.getPosition();
 		curTime = sId;

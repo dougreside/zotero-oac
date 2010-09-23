@@ -389,8 +389,8 @@ Zotero.Annotaters = {};
 				'zotero-annotate-tb-video-drawer-select': 's'
 			};
 			const markToolCallbacks = {
-				"zotero-annotate-tb-video-time-marker-mark": "markNow",
-				"zotero-annotate-tb-video-time-marker-range": "markStartEnd"
+				"zotero-annotate-tb-video-time-marker-mark": "markNow"
+
 			};
 			self._curCallbacks = {};
 				self._mode="m";

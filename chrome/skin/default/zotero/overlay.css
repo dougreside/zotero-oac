@@ -381,13 +381,20 @@
 
 #zotero-annotate-tb-vector-drawer-zoomIn
 {
-	list-style-image: url('chrome://zotero/skin/annotate-drawer-select.png');
+	list-style-image: url('chrome://zotero/skin/icon_zoomin.png');
 }
 #zotero-annotate-tb-vector-drawer-zoomOut
 {
-	list-style-image: url('chrome://zotero/skin/annotate-drawer-select.png');
+	list-style-image: url('chrome://zotero/skin/icon_zoomout.png');
 }
-
+#zotero-annotate-tb-vector-drawer-zoomIn:hover
+{
+	list-style-image: url('chrome://zotero/skin/icon_zoomin_hover.png');
+}
+#zotero-annotate-tb-vector-drawer-zoomOut:hover
+{
+	list-style-image: url('chrome://zotero/skin/icon_zoomout_hover.png');
+}
 #zotero-annotate-tb-video-drawer-movie
 {
 	list-style-image: url('chrome://zotero/skin/annotate-vector-drawer-edit.png');

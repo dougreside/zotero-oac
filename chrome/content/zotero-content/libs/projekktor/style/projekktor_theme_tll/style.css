@@ -36,7 +36,6 @@ background: url("background2.png") repeat-x scroll 0 0 #fdfdfd;
 border-top: 1px solid #aaa;
 padding: 0;
 margin:0;
-z-index: 13;
 }
 
 .ppplay { 
@@ -49,7 +48,6 @@ width: 30px;
 height: 30px;
 cursor: pointer;
 border-right: 1px solid #303030;
-z-index: 13;
 }
 
 .pppause { 

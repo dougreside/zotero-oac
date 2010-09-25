@@ -374,7 +374,7 @@ Zotero.Annotaters = {};
 				}) +
 				 "\n</body></html>";
 	};
-
+  
 	ZVDM.prototype = {
 		shouldSave: function() {
 			return JSON.parse(this._contentDoc.defaultView.wrappedJSObject.savable());
@@ -394,6 +394,23 @@ Zotero.Annotaters = {};
 			};
 			self._curCallbacks = {};
 				self._mode="m";
+				 var myExtension = {  
+   myListener: function(evt) {  
+
+	var radioButtons = browserDoc.getElementById("zotero-annotate-tb-video-drawer-movie");
+	radioButtons.checked=true;
+   }  
+ };  
+				browserDoc.addEventListener("setMovieMode", function(e) { myExtension.myListener(e); }, false, true);
+
+		
+			//sMM();
+			//var movieMode = document.createEvent("movieMode");
+			
+             		
+			
+			//radioButtons.addEventListener("movieMode",sMM,false);	
+			//alert(radioButtons);
 			forEachInObj(drawToolCallbacks, function(mode, elID){
 				var el = browserDoc.getElementById(elID);
 				var cb = self._curCallbacks[elID] = function() {

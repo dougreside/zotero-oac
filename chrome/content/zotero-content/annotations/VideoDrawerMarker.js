@@ -10,6 +10,15 @@ var moments = null;
 var allTimes ={"moments":[]};
 var curTime = 0;
 var selShape = null;
+var overVideo = false;
+
+ var element = document.createElement("eventElem");  
+    element.setAttribute("attribute1", "foobar");  
+    element.setAttribute("attribute2", "hello world");  
+    document.documentElement.appendChild(element);  
+      
+    var evt = document.createEvent("Events");  
+    evt.initEvent("setMovieMode", true, false);   
 function markNow() {
 	PInstance[0].pause();
 	var pos = PInstance[0].getPosition()+"";
@@ -52,9 +61,16 @@ function setDrawMode(){
 		});
 }
 function setMovieMode(){
-		$(".vd-container").css({
+		//$(".vd-container").eq(0).trigger("movieMode");
+	
+
+		/*$(".vd-container").css({
 			"z-index": "9"
-		});
+		});*/
+		mode("m");
+		
+			$(".vd-container").eq(0)[0].dispatchEvent(evt);
+
 }
 
 function timeClick(clicked){
@@ -380,6 +396,10 @@ function build(mode, scale,old) {
 			}
 		
 	});
+
+	  
+    
+	
 	if (old) {
 		
 		
@@ -440,6 +460,24 @@ function build(mode, scale,old) {
 		clearShapes();
 	
 		});
+	$("#player-ui-container").bind("mouseover",function(){
+		
+		overVideo=true;
+	});	
+	$("#player-ui-container").bind("mouseout",function(){
+
+		overVideo=false;
+	});	
+$("html").unbind("click");
+	$("html").bind("click",function(e){
+
+	//$("html").trigger("movieMode");
+		if (!(overVideo)){
+		
+			setMovieMode();
+		}
+	
+	})
 	/*PInstance[0].play();
 				
 		PInstance[0].addListener("time",function(e){

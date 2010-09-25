@@ -1,0 +1,170 @@
+PROJEKKTOR - simply mighty <video>
+http://www.projekktor.com
+
+V0.7.14r1
+=========
+
+ * fixed flash detection bug
+ * fixed iPhone issues
+
+V0.7.14
+========
+
+ additions:
+ * [core] added general iPad markup syntax compatibility fix
+ * [core] added iPad support for single files
+ * [core] added error-testcard if flash is required but user´s Flash version is below 9
+ * [core] added plugin-preloading mechanism
+ * [core] added new content type "text/html" which allows to display iframed HTML content
+ * [plugin: iframeoverlays] new plugin which allows video overlays via iframes catching player events.
+ 
+ fixes:
+ * [core] fixed IE display click behavior
+ * [core] fixed minor memory leaks
+ * [plugin: logo] scaling issue fixed
+ * [plugin: bufferingicon] fixed flash issue (spinning wheel of death I)
+ 
+ 
+ 
+
+V0.7.13i
+========
+
+ additions:
+ * [core] added (experimental) RSS support
+ * [core] added i*-mobile support for single (non playlisted) files
+ * [core] Projekktor now also catches up <audio> elements.
+ * [core] Setting "PROJEKKTOR_CONFIG['spawn'] to "false" disables auto -instantiation/-replacement.
+ * [core] added JSON_service for the server.php example as fallback for older PHP installations.
+ * [plugin: controlbar] made texts (timedisplay, title) unselectable
+ 
+ fixes:
+ * [core] Individually scripted video container projekktorization now works properly
+ * [core] fixed "loop" behavior on autoplay=TRUE
+ * [core] fixed config merging in case of item-configs through playlists
+ * [core] fixed scrubbing issues in safari and chrome
+ * [plugin: controlbar] fixed "play/pause"-toggle issue while "autoplay" is TRUE
+ * [plugin: controlbar] fixed title display
+ * [plugin: controlbar] fixed IE issues
+ 
+ changes:
+ * [core] standard playerelements (startbutton, bufferingicon, poster) are now encapsulated into plugins
+ * [core] additional browsertype detection to identify mobile browsers implemented
+ * [core] changed "full viewport" handling as preparation for further onscreen manipulations
+ * [core] changed config-logic for plugins and altered existing ones accordingly
+
+
+V0.7.12
+=======
+
+ additions:
+ * [core] playlist items now get a unqiue IDs which are valid for the whole playbac sessiobn
+ * [core] playlist items of type "text/json" will load a new playlist as specified and reset the player which enables the
+   possibility to build trees of  x-linked playlists
+ 
+ * [config option] "controlsDisableFade": enable/disable fading of overlayed control elements
+ * [config option] "start": sets an offset in seconds to start playback from, http://code.google.com/p/projekktor-zwei/issues/detail?id=33
+ * [config option] "defaultPoster" - sets a default poster in case none is provided by tag attributes or item configuration
+ * [config option] "bypassFlashFFFix" - enables / disables a strange flash-reinit loop required for FF due to a rendering "bug"
+ * [config option] "enableNativePlayback" - enable/disable native players to force flash fallback
+ 
+ * [plugin controlbar] prev/next is now disabled if first or respectively last item is played back
+
+ * [API function] getPlaylist
+ * [API function] getItemId
+ * [API function] getItemTrackId
+ * [API function] addListener
+ * [API function] getTimeLeft
+ * [API function] play
+ * [API function] pause
+ * [API function] playpause
+
+
+ fixes:
+ * fixed issues on missing or invalid poster-URL in IE & Opera
+ * fixed poster/cover scaling on audio playback
+ * fixed play/pause- & display- click issues on missing poster attribute
+ * fixed poster positioning
+ * fixed stuck on empty "poster" attribute, http://code.google.com/p/projekktor-zwei/issues/detail?id=42
+ * fixed crash on provided codec parameter, http://code.google.com/p/projekktor-zwei/issues/detail?id=45
+
+ 
+ changes:
+ * display "cursor" is set to "pointer" while player shows just the poster
+ * poster now resizes on player resize
+ * Playlist entries are now verified and applied to models directly after playlist is loaded from server (and not "on demand" any longer)
+ * improved display click & doubleclick handling
+
+
+V0.7.11
+=======
+ lost in space
+
+
+V0.7.10
+=======
+
+ fixes:
+ * Fixed general load-progress bar issues  
+ * Improved "seek" accuracy
+ * Fixed filetype detection issues
+ 
+
+V0.7.9
+======
+
+ additions:
+ * made big "play" invisible on autoplay
+
+
+V0.7.8
+======
+
+ additions:
+ * "enableFlashFallback" config option allows to enable/disable automatic flash fallback (default: true), http://code.google.com/p/projekktor-zwei/issues/detail?id=35
+ * "controlsTemplateFilter" config option allows assignment of custom string rewrite functions for time- & title strings.
+ 
+ changes:
+ * improved file type detection and fallback decision stuff, http://code.google.com/p/projekktor-zwei/issues/list?cursor=26
+ * removed flashVar parameters for MP4 Flash fallback component, http://code.google.com/p/projekktor-zwei/issues/detail?id=34
+ * set default Flash fallback component«s stage quality to HIGH and enabled video smoothing, http://code.google.com/p/projekktor-zwei/issues/detail?id=36
+ 
+ fixes:
+ * IE7, IE8 issues, http://code.google.com/p/projekktor-zwei/issues/detail?id=32&can=1
+ * fixed opera fallback issues
+ * fixed testcard«s "click display to continue" bug 
+
+
+V0.7.6
+======
+ 
+ additions:
+ * Added WEBM support
+ * Added experimental native audio support (flash fallback pending)
+ * Core: dynamic IE7, IE8 HTML5 fix, makes the xmlns="http://www.w3.org/1999/xhtml/video" workaround obsolete
+ * Controlbar Plugin: Volume slider is now clickable (and the knob still draggable)
+ * Flash video component: added "time" and "loaded" attribute, http://code.google.com/p/projekktor-zwei/issues/detail?id=21
+ 
+ changes:
+ * removed automatic CSS inclusion (too much fuzz and user complaints - e.g. http://code.google.com/p/projekktor-zwei/issues/detail?id=27)
+ * "Totally Looks Like..." Theme overhauled
+ * Workaround for Firefox flash resize bug simplified
+ 
+ fixes:
+ * fixed some strange buffer-icon behavior
+ * fixed multi-instance issues on flash-fallback
+ * fixed FLV issue, http://code.google.com/p/projekktor-zwei/issues/detail?id=22
+ * fixed poster issue, http://code.google.com/p/projekktor-zwei/issues/detail?id=25
+ * fixed IE youtube issue, http://code.google.com/p/projekktor-zwei/issues/detail?id=30
+
+V0.7.2
+======
+ * fixed, added and altered that much, you shouldn«t use 0.6.1 anymore
+
+V0.6.1
+======
+ * initial release - it works
+
+
+free the princess of agentia!
++++

@@ -35,9 +35,12 @@ function build(mode, scale, old) {
 		addShape(obj);	
 	});
 	$("body").eq(0).bind("itemSelect",function(e,shapeInfo){
+		if (selShape.length > 0) {
+			drawer.changeColor(selShape, "00FF00");
+		}
 		
-		drawer.changeColor(selShape,"00FF00");
-		selShape=shapeInfo.substring("image_".length);
+		selShape=shapeInfo.substring("itemRow_image_".length);
+
 		drawer.changeColor(selShape,"FF0000");
 	});
 	$("body").eq(0).bind("rowDeleted",function(e,rId){

@@ -245,7 +245,6 @@ Zotero.Annotaters = {};
 		"<link rel='stylesheet' type='text/css' href='chrome://zotero-content/skin/annotations/wrapper.css' />"+
 "<link rel='stylesheet' type='text/css' href='chrome://zotero-content/skin/annotations/AudioTimeMarker.css' />"+
 	"<link rel='stylesheet' href='chrome://zotero-content/skin/libs/projekktor/style/projekktor_theme_tll/style.css' type='text/css' media='screen' />"+
-	"<link type='text/css' href='chrome://zotero-content/skin/libs/ui.all-slider.css' rel='stylesheet' /> "+
 	buildScriptDeps({"libs": ["jquery.js","projekktor.js","swfobject.js"]})+
 	"<script language='javascript' type='text/javascript'>"+			
 			
@@ -270,9 +269,9 @@ Zotero.Annotaters = {};
 				buildScriptDeps({
 					"libs": [ "underscore.js", "jquery.ui.core.js",
 						"jquery.ui.widget.js", "jquery.ui.mouse.js",
-						"jquery.ui.slider.js","projekktorConfig.js"],
-					"annotations": ["PlayerUI.js","NoteTable.js",
-						"AudioTimeMarker.js", "other.js"]
+						"projekktorConfig.js"],
+					"annotations": ["NoteTable.js",
+						"AudioTimeMarker.js"]
 				}) +
 				 "\n</body></html>";
 	};
@@ -369,8 +368,8 @@ Zotero.Annotaters = {};
 						"jquery.ui.widget.js", "jquery.ui.mouse.js",
 						"jquery.ui.slider.js","projekktorConfig.js", "raphael.js", "jquery.ui.draggable.js",
 						"jquery.ui.resizable.js", "jquery.ui.selectable.js", "jquery.ui.position.js"],
-					"annotations": ["VectorDrawer.js","PlayerUI.js","NoteTable.js",
-						"VideoDrawerMarker.js", "other.js"]
+					"annotations": ["VectorDrawer.js","NoteTable.js",
+						"VideoDrawerMarker.js"]
 				}) +
 				 "\n</body></html>";
 	};
@@ -403,14 +402,7 @@ Zotero.Annotaters = {};
  };  
 				browserDoc.addEventListener("setMovieMode", function(e) { myExtension.myListener(e); }, false, true);
 
-		
-			//sMM();
-			//var movieMode = document.createEvent("movieMode");
-			
-             		
-			
-			//radioButtons.addEventListener("movieMode",sMM,false);	
-			//alert(radioButtons);
+
 			forEachInObj(drawToolCallbacks, function(mode, elID){
 				var el = browserDoc.getElementById(elID);
 				var cb = self._curCallbacks[elID] = function() {

@@ -12,9 +12,7 @@ var curTime = 0;
 var selShape = null;
 var overVideo = false;
 
- var element = document.createElement("eventElem");  
-    element.setAttribute("attribute1", "foobar");  
-    element.setAttribute("attribute2", "hello world");  
+ var element = document.createElement("eventElem");   
     document.documentElement.appendChild(element);  
       
     var evt = document.createEvent("Events");  
@@ -185,6 +183,44 @@ function jumpToTime(t){
 		return true;
 		//showShapes(selRowId);
 }
+function selectRow(selRowId){
+	time = selRowId.substring(selRowId.lastIndexOf("_") + 1);
+			var t = time.replace(/-/g, ".");
+			t = parseFloat(t);
+			//alert(t);
+			if (!(PInstance[0].getIsStarted())) {
+			
+				PInstance[0].play();
+				
+				PInstance[0].addListener("time",function(e){
+					PInstance[0].playerObject.mediaElement.api_attribute("ontimeupdate", false);
+
+					PInstance[0].pause();
+					jumpReturn=false;
+					jumpReturn = jumpToTime(t);
+					if (jumpReturn) {
+						showShapes(selRowId.substring("itemRow_".length));
+						//alert("quack");
+					}
+					else{
+						//alert("why");
+					}
+	
+				});
+				
+			}
+			else {	
+				jumpReturn=false;		
+				jumpReturn = jumpToTime(t);			
+					if (jumpReturn) {
+						showShapes(selRowId.substring("itemRow_".length));
+						//alert("quack2");
+					}
+					else{
+						//alert("why2");
+					}
+			}
+}
 function build(mode, scale,old) {
 	
 	self = this;
@@ -343,8 +379,10 @@ function build(mode, scale,old) {
 			var endPoint = relevant.lastIndexOf("_",relevant.lastIndexOf("_")-1);
 		
 			var tId = relevant.substring(0,endPoint);
-			$("#itemTD_"+tId).click();
-			//$("#itemTable_video").trigger("itemSelect",[tId]);
+			
+			//tm.selectRow(tId);
+			selectRow("#itemTD_"+tId.substring("itemRow_".length));
+
 		var start = selRowId.lastIndexOf("_",selRowId.lastIndexOf("_")-1)+1;
 		var shapeId = selRowId.substring(start);
 		if (selShape) {
@@ -358,42 +396,13 @@ function build(mode, scale,old) {
 	$("body").eq(0).unbind("itemSelect");
 	$("body").eq(0).bind("itemSelect",function(e,selRowId){
 			
-			time = selRowId.substring(selRowId.lastIndexOf("_") + 1);
-			var t = time.replace(/-/g, ".");
-			t = parseFloat(t);
-			//alert(t);
-			if (!(PInstance[0].getIsStarted())) {
+			if (selShape) {
+			drawer.changeColor(selShape, "00FF00");
+			}
+			selShape=null;
+			$(".selectedChild").removeClass("selectedChild");
+			selectRow(selRowId);
 			
-				PInstance[0].play();
-				
-				PInstance[0].addListener("time",function(e){
-					PInstance[0].playerObject.mediaElement.api_attribute("ontimeupdate", false);
-
-					PInstance[0].pause();
-					jumpReturn=false;
-					jumpReturn = jumpToTime(t);
-					if (jumpReturn) {
-						showShapes(selRowId.substring("itemRow_".length));
-						//alert("quack");
-					}
-					else{
-						//alert("why");
-					}
-	
-				});
-				
-			}
-			else {	
-				jumpReturn=false;		
-				jumpReturn = jumpToTime(t);			
-					if (jumpReturn) {
-						showShapes(selRowId.substring("itemRow_".length));
-						//alert("quack2");
-					}
-					else{
-						//alert("why2");
-					}
-			}
 		
 	});
 

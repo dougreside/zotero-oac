@@ -33,7 +33,10 @@ jQuery.extend(rootNS.itemTable.prototype, {
 		//itemObj = JSON.parse(itemJSON);
 		var itemName = itemObj.name;
 		var itemId = self.name+"_"+itemObj.id;
-		
+		var rowClass = "childRow";
+		if (self.name.indexOf("childTable")>=0){
+			rowClass="itemRow";
+		}
 		if ($("#itemRow_"+itemId).size()>0){
 		//self.selectRow(itemId);	
 		}
@@ -91,17 +94,14 @@ jQuery.extend(rootNS.itemTable.prototype, {
 		$("#itemTable_"+self.name).find("tr:last").find("td.itemNote").eq(0).text(o.note);		
 	},
 	selectRow: function(itemRow){
-		
+	
 		var self =this;
 
 		var itemName = "#"+itemRow;
-		if (!(self.name.indexOf("childTable") == 0)) {
-			
 			$(".selectedRow").removeClass("selectedRow");
-			
+		if (!(self.name.indexOf("childTable") == 0)) {
+		
 			$(itemName).addClass("selectedRow");
-			
-			
 			$(itemName).trigger("itemSelect", [itemRow]);
 		}
 		else{
@@ -109,6 +109,7 @@ jQuery.extend(rootNS.itemTable.prototype, {
 			$(".selectedChild").removeClass("selectedChild");
 			if (itemName.indexOf("childTable") >= 0) {
 				$(itemName).addClass("selectedChild");
+				$(itemName).parent().parent().parent().prev().addClass("selectedRow");
 				$(itemName).trigger("childSelect", [itemRow]);
 			}
 		}

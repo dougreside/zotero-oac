@@ -341,7 +341,7 @@ Zotero.Annotaters = {};
 		"<link rel='stylesheet' type='text/css' href='chrome://zotero-content/skin/annotations/wrapper.css' />"+
 "<link rel='stylesheet' type='text/css' href='chrome://zotero-content/skin/annotations/VideoMarker.css' />"+
 	"<link rel='stylesheet' href='chrome://zotero-content/skin/libs/projekktor/style/projekktor_theme_tll/style.css' type='text/css' media='screen' />"+
-	"<link type='text/css' href='chrome://zotero-content/skin/libs/ui.all-slider.css' rel='stylesheet' /> "+
+	"<link type='text/css' href='chrome://zotero-content/skin/libs/ui.resizable.css' rel='stylesheet' /> "+
 	buildScriptDeps({"libs": ["jquery.js","projekktor.js","swfobject.js"]})+
 	"<script language='javascript' type='text/javascript'>"+			
 			

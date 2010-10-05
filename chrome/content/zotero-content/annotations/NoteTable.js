@@ -30,6 +30,10 @@ jQuery.extend(rootNS.itemTable.prototype, {
 
 	addRow: function(itemObj){
 		var self=this;
+		var noteText="Click to add a note";
+		if (itemObj.note){
+			noteText=itemObj.note
+		}
 		//itemObj = JSON.parse(itemJSON);
 		var itemName = itemObj.name;
 		var itemId = self.name+"_"+itemObj.id;
@@ -57,7 +61,7 @@ jQuery.extend(rootNS.itemTable.prototype, {
 		
 		}
 		
-		$("#itemTable_"+self.name).append("<tr id='itemRow_"+itemId+"'><td id='itemTD_"+itemId+"' class='itemTD'>"+itemName+"</td><td class='itemNote' id='note_"+itemId+"_"+lastNum+"'>Click here to add a note</td><td class='saveButton_"+self.name+"'>save</td><td class='deleteButton_"+self.name+"'>delete</td></tr>");				
+		$("#itemTable_"+self.name).append("<tr id='itemRow_"+itemId+"'><td id='itemTD_"+itemId+"' class='itemTD'>"+itemName+"</td><td class='itemNote' id='note_"+itemId+"_"+lastNum+"'>"+noteText+"</td><td class='saveButton_"+self.name+"'>save</td><td class='deleteButton_"+self.name+"'>delete</td></tr>");				
 		$("#itemTD_"+itemId).unbind("click");
 		$("#itemTD_"+itemId).click(function(e){
 		
@@ -85,13 +89,18 @@ jQuery.extend(rootNS.itemTable.prototype, {
 	},
 	deleteRow: function(item){	
 		rId = item.parent().attr("id");	
-		item.parent().remove();		
 		$("body").eq(0).trigger("rowDeleted",[rId]);
+		if (item.parent().next().hasClass("tableRow")){
+			item.parent().next().remove();
+		}
+		item.parent().remove();		
+		
 	},
 	importRow:function(o){
 		var self=this;
 		this.addRow(o);
-		$("#itemTable_"+self.name).find("tr:last").find("td.itemNote").eq(0).text(o.note);		
+		//alert("o id"+o.id);
+		//$("#itemTable_"+self.name).find("tr:last").find("td.itemNote").eq(0).text(o.note);		
 	},
 	selectRow: function(itemRow){
 	
@@ -109,6 +118,7 @@ jQuery.extend(rootNS.itemTable.prototype, {
 			$(".selectedChild").removeClass("selectedChild");
 			if (itemName.indexOf("childTable") >= 0) {
 				$(itemName).addClass("selectedChild");
+				//alert($(itemName).parent().parent().parent().prev().html());
 				$(itemName).parent().parent().parent().prev().addClass("selectedRow");
 				$(itemName).trigger("childSelect", [itemRow]);
 			}
@@ -144,18 +154,17 @@ jQuery.extend(rootNS.itemTable.prototype, {
 
 	addChild:function(o,s){
 		var self = this;
-		if (s) {
-			var selR = s.row;
-			var selId = s.id;
-		}
-		else {
-			var selR = $(".selectedRow").eq(0);
-			var selId = $(".selectedRow").eq(0).attr("id");
-		}
+		
+		var selR = o.row;
+		var selId = o.id;
+
 		var childId = "child_"+selId;
 		var curTable = null;
+		
 		if ($("#"+childId).size() == 0) {
-			selR.after("<tr id='" + childId + "' class='tableRow'></td>");
+			
+			selR.after("<tr id='" + childId + "' class='tableRow'></tr>");
+			
 			var childRow = $("#" + childId)
 			
 			
@@ -173,18 +182,22 @@ jQuery.extend(rootNS.itemTable.prototype, {
 			
 		}
 		else{
-			
+	
 			curTable = _.detect(self.childTables,function(o){
 			return (o.name == "childTable_"+selId);
 			
 			});
 		
-		}	
+		}
+			
 		if (curTable){
-			if (o.note){
-				curTable.importRow(o);
+			
+			if (s.note){
+				curTable.importRow(s);
 			}else{
-				curTable.addRow(o);
+				
+				curTable.addRow(s);
+			
 			}
 		
 		}

@@ -56,7 +56,7 @@ function build(mode, scale, old) {
 	thisNote = _.detect(noteArray, function(o){
 				return (o.id == nId);
 			});
-			alert(thisNote);
+			
 				if (thisNote) {
 			
 				thisNote.note = noteText;

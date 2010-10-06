@@ -5,22 +5,23 @@
 }
 .leftColumn{
 	float:left;
-
+	width:610px;
+	height:550px;
 }
 
 .imgContainer{
-
+   float:left;
    width:600px;
    height: 540px;
-   overflow: hidden;
+
 }
 img#to-mark{
-  	width:400px;
+  width:400px;
 }
 #imgSpace{
 
 	position: absolute;
-	overflow:auto;
+	   overflow:auto;
 }
 .vd-container{
 	left:0px;

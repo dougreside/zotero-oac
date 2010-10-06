@@ -92,7 +92,8 @@ function savable() {
 	
 	return JSON.stringify(response);
 }
-function zoomIn(){
+function imageZoomIn(){
+
 		$(".vd-container").width(1.25*parseFloat($(".vd-container").width()));
 		$(".vd-container").height(1.25*parseFloat($(".vd-container").height()));
 		$("#to-mark").css("width",(1.25*parseFloat($("#to-mark").width()))+'px');
@@ -102,7 +103,7 @@ function zoomIn(){
 		drawer.scale(1.25); 
 
 }
-function zoomOut(){
+function imageZoomOut(){
 			$(".vd-container").width(.75*parseFloat($(".vd-container").width()));
 		$(".vd-container").height(.75*parseFloat($(".vd-container").height()));
 		$("#to-mark").css("width",(.75*parseFloat($("#to-mark").width()))+'px');

@@ -13,6 +13,13 @@
 	// TODO: make these configurable
 	var INIT_ATTRS = {"stroke-width": "1px", "stroke": "#a12fae"};
 	var SELECTED_ATTRS = {"stroke-width": "1px", "stroke": "#ff6666"};
+	var CMD_OFFSET_FFX=0;
+	var CMD_OFFSET_FFY=0;
+	var trueSizeX=$(window).width();
+	var trueSizeY=$(window).height();
+	var lastSizes={'off1':0,'off2':0};
+	var nextSizes={'off1':0,'off2':0};
+
 
 	function _makePathStr(ps) {
 		return "M " + _.map(ps, function(p) {return p.x + " " + p.y;}).join(" L ");
@@ -432,50 +439,58 @@
 		// See exportShapes docs for more info
 		importShapes: function(shapeStr){
 			var self=this;
-			
-			if (shapeStr.length > 0) {
-			
-			
-				shapes = shapeStr;
-				for (var i = 0; i < shapes.length; i++) {
-					var s = shapes[i];
-					var type = s.type;
-					//  To convert from one scale to the other multiple each
-					//  number in the "from" scale by ("to" scale/from scale)
-					
-					var p = parseFloat(self._scale / s._scale);
-					if (type == 'rect') {
-					
-						var newRect = this._paper.rect(p * s.posInfo.x, p * s.posInfo.y, p * s.posInfo.width, p * s.posInfo.height);
-						newRect.node.id = s.id;
-						newRect._scale = self._scale;
-						
-						this._activeShapes[s.id] = newRect;
-					}
-					else 
-						if (type == 'ellipse') {
-							var newEllipse = this._paper.ellipse(p * s.posInfo.cx, p * s.posInfo.cy, p * s.posInfo.rx, p * s.posInfo.ry);
-							newEllipse.node.id = s.id;
-							newEllipse._scale = self._scale;
-							this._activeShapes[s.id] = newEllipse;
-						}
-						else 
-							if (type == 'path') {
-								var newPath = this._paper.path(s.posInfo.path);
-								newPath.node.id = s.id;
-								newPath._scale = self._scale;
-								this._activeShapes[s.id] = newPath;
-							}
-							else {
-								throw "Unrecognized shape from import";
-							}
-					$("body:first").trigger("shapeImported",[s]);		
-					if (s.color) {
-						this._activeShapes[s.id].attr("stroke", s.color);
-					}
-				}
-				
+			if (typeof shapes == "string") {
+				shapes = JSON.parse(shapeStr);
 			}
+			else{
+				shapes = shapeStr;
+			}
+			for (var i=0;i<shapes.length;i++){
+				var s = shapes[i];
+				var type = s.type;
+				//  To convert from one scale to the other multiple each
+				//  number in the "from" scale by ("to" scale/from scale)
+					
+				var p =  parseFloat(self._scale/s._scale);
+				if (type == 'rect') {
+					
+					var newRect = this._paper.rect(p*s.posInfo.x, p*s.posInfo.y, p*s.posInfo.width, p*s.posInfo.height);
+					newRect.node.id = s.id;	
+					newRect._scale=self._scale;
+					
+					this._activeShapes[s.id]=newRect;
+                } else if (type == 'ellipse') {
+                    var newEllipse = this._paper.ellipse(p*s.posInfo.cx, p*s.posInfo.cy, p*s.posInfo.rx, p*s.posInfo.ry);
+					newEllipse.node.id = s.id;	
+					newEllipse._scale=self._scale;
+					this._activeShapes[s.id]=newEllipse;
+                }	
+				else if (type == 'path') {
+					var points = _createPointsFromPath(s.posInfo.path);
+					shifted = _.each(points, function(sh){
+						
+						sh.x = (parseFloat(sh.x)*p);
+															
+						sh.y = (parseFloat(sh.y)*p);	
+						// o._scale=(x * self._scale);
+						return {x:sh.x,y:sh.y};
+					});
+					var newstr = _makePathStr(points)+"z";
+					
+					s.posInfo={'path':newstr};
+					var newPath = this._paper.path(s.posInfo.path);
+					newPath.node.id = s.id;
+					newPath._scale=self._scale;
+					this._activeShapes[s.id]=newPath;
+				} else {
+					throw "Unrecognized shape from import";
+				}	
+				if(s.color){
+					this._activeShapes[s.id].attr("stroke",s.color);
+				}
+			}
+			
+		
 		},
 		// Export all of the current canvas shapes as a JSON
 		// object
@@ -524,12 +539,6 @@
 			});		 
 			return JSONoutput;		
 		},
-		changeColor: function(id,color){
-			if(this._activeShapes[id]){
-				this._activeShapes[id].attr("stroke",color);
-				
-			}
-		},
 		// Delete a shape, must be in the activeShapes
 		// id : {String} unique id of shape to delete
 		deleteShape: function(id){
@@ -554,6 +563,11 @@
 			
 			this._paper.clear();
 			this._activeShapes = {};
+			// make sure to get rid of selector box
+			$("#selBB").resizable('destroy');
+			$("#selBB").draggable('destroy');
+
+			$("#selBB").remove();
 		},
 		// Hide all shapes from the DOM on the canvas
 		hideShapes: function(){
@@ -578,6 +592,7 @@
 			if(!self._tarObj) return;
 			self._tarObj.color=_newColor;
 			self._tarObj.attr("stroke",self._tarObj.color);
+			$("body:first").trigger("shapeChanged",[self.exportShapes()]);
  		},
 		// Adjust each of the shapes in the _activeShapes array by x
 		// x : {Integer/Float} - new scale
@@ -662,7 +677,6 @@
 			var self = this;
 			self._cont = self._cont || $("<div class=\"vd-container\"></div>").appendTo(self._over.elm.parent());
 			self._cont.css({left: 0, top:0, position: "absolute"});
-			
 			self._paper = R(self._cont[0],
 			self._over.elm.width(), self._over.elm.height());
 			self._canvas = {elm:$(self._paper.canvas)};
@@ -671,6 +685,25 @@
 		
 			self._installHandlers();
 			
+			// function acts as a global listener for when the user strikes the cmd+ or cmd- 
+			// keycode combo. this increases the font size in FF and offsets shapes
+			$(window).resize(function(e){
+				
+				if(lastSizes['off1']==0) lastSizes['off1']=self._canvas.off;
+				if(lastSizes['off2']==0) lastSizes['off2']=self._over.offset;
+				// see how far -/+ the current offset is and get difference
+				if(lastSizes['off1'].left<self._canvas.elm.offset().left){
+	
+					self._canvas.off=self._canvas.elm.offset();
+					self._over.offset=self._over.elm.offset();
+					if(self._canvas.off.left<self._over.offset.left) self._canvas.off=self._over.offset;
+				} else if(lastSizes['off1'].left>self._canvas.elm.offset().left){
+					self._canvas.off=self._canvas.elm.offset();
+					self._over.offset=self._over.elm.offset();
+					if(self._canvas.off.left>self._over.offset.left) self._canvas.off=self._over.offset;
+				}
+	
+			});
 		
 		},
 		// Change the mode for drawing shapes
@@ -678,17 +711,16 @@
 		setDrawMode: function(mode){
 			this._drawMode = mode;
 		},
-		
-		
 		// Takes a mouse event and returns the calculated XY coordinates of the mouseclick at that time
 		// e : {Event} - mouseclick,mousedrag, mousemove,etc.
 		// returns : {x {Float}, y {Float}}
 		_getCanvasXY: function (e) {
 			var self = this;
 			
+			// console.log("getxy: "+e.clientX+" minus "+self._canvas.off.left+" scrollTop: "+self._over.elm.children("img").scrollTop());
 			return {
-				x: (e.clientX-self._canvas.off.left)+parseFloat($(document).scrollLeft()),
-				y: ((e.clientY-self._canvas.off.top)+parseFloat($(document).scrollTop()))
+				x: (e.clientX-self._over.offset.left)+parseFloat(self._over.elm.scrollLeft())+parseFloat($('.workspace').scrollLeft()),
+				y: ((e.clientY-self._over.offset.top)+parseFloat(self._over.elm.scrollTop())+parseFloat($(".workspace").scrollTop()))
 			};
 		},
 		// Attaches mousedown, mouseup, and mouseleave listeners to the canvas DOM 
@@ -818,7 +850,6 @@
 					//NEW METHOD for selecting shapes:
 					if (!(e.target.id == "selBB")) {
 						if (self._obj) {
-							//self._obj.cur.attr(INIT_ATTRS);
 							
 						}
 						self._obj = null;
@@ -863,10 +894,10 @@
 					//var bb = targetObj.cur.getBBox();
 					//var bb = $("#"+targetObj.id+":first")[0].getBBox();
 					var bb = targetObj.getBBox();
-					var bbH = parseFloat(bb.height);
-					var bbW = parseFloat(bb.width);
-					var bbL = parseFloat(bb.x);
-					var bbT = parseFloat(bb.y);
+					var bbH = parseInt(bb.height,10);
+					var bbW = parseInt(bb.width,10);
+					var bbL = parseInt(bb.x,10);
+					var bbT = parseInt(bb.y,10);
 					
 			
 					//FOR TILE: container of entire canvas is the raphael div - id: raphael - OLD
@@ -889,7 +920,7 @@
 					if (self._obj){
 						self._tarObj = self._obj;
 					}
-					$("#selBB").trigger("shapeSelected");
+					
 					$("#selBB").draggable({
 						containment: self._cont,
 						start: function(e,ui){
@@ -911,8 +942,8 @@
 						drag: function(e, ui){
 							tobj = self._tarObj;
 							var rs = _relScale(self, tobj);
-							xDiff = parseFloat(ui.offset.left)-parseFloat(self._over.offset.left);
-							yDiff = parseFloat(ui.offset.top)-parseFloat(self._over.offset.top);
+							xDiff = parseFloat(ui.offset.left)-parseFloat(self._over.offset.left)+$(".workspace").scrollLeft();
+							yDiff = parseFloat(ui.offset.top)-parseFloat(self._over.offset.top)+$(".workspace").scrollTop();
 							if (tobj.type == "rect") {
 								//self._activeShapes[tobj.id].attr({
 								tobj.attr({
@@ -976,12 +1007,19 @@
 						
 						$("#selBB").resizable({
 							handles:'all',
+							minWidth:30,
+							minHeight:30,
 							start: function(e, ui){
 								tobj = self._tarObj;
 								var rs = _relScale(self, tobj);
-								ui.size.width = (tobj.attr("rx"))*2;
-								ui.size.height = (tobj.attr("ry"))*2;
-
+								if(tobj.type=="rect"){
+									ui.size.width=tobj.attr('width');
+									ui.size.height=tobj.attr('height');
+								
+								} else if(tobj.type=='ellipse'){
+									ui.size.width = (tobj.attr("rx"))*2;
+									ui.size.height = (tobj.attr("ry"))*2;
+								}
 								$(".axe_node").remove();
 								$(".axe_start_node").remove();
 							},
@@ -989,6 +1027,14 @@
 								tobj = self._tarObj;
 								var rs = _relScale(self, tobj);
 								if (tobj.type == "rect") {
+									if(ui.size.width<0){
+										return;
+									}
+									if(ui.size.height<0){
+										return;
+									}
+									// TODO: issue with SVG shape disappearing once 
+									// resizing starts
 									tobj.attr({
 										width: ui.size.width,
 										height: ui.size.height
@@ -1020,8 +1066,7 @@
 					self._obj = targetObj;
 						}
                  } else {
-                     $("body").eq(0).trigger("unassignedClick");
-					 
+                     throw "should not be reached";
                  }
              }).mouseup(function (e) {
 	//At mouseup, that's when the user has finished drawing a shape (Click and Drag and Done)

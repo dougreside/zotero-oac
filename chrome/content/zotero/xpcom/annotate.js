@@ -167,8 +167,7 @@ Zotero.Annotaters = {};
 			const toolCallbacks = {
 				'zotero-annotate-tb-vector-drawer-rectangle': 'r',
 				'zotero-annotate-tb-vector-drawer-ellipse': 'e',
-				'zotero-annotate-tb-vector-drawer-polygon': 'p',
-				'zotero-annotate-tb-vector-drawer-select': 's'
+				'zotero-annotate-tb-vector-drawer-polygon': 'p'
 			};
 			var self = this;
 			this._curCallbacks = {};
@@ -188,8 +187,8 @@ Zotero.Annotaters = {};
 			
 			
 			const zoomCallbacks = {
-				"zotero-annotate-tb-vector-drawer-zoomIn": "zoomIn",
-				"zotero-annotate-tb-vector-drawer-zoomOut": "zoomOut"
+				"zotero-annotate-tb-vector-drawer-zoomIn": "imageZoomIn",
+				"zotero-annotate-tb-vector-drawer-zoomOut": "imageZoomOut"
 			};
 		
 			forEachInObj(zoomCallbacks, function(funcName, elID){
@@ -315,7 +314,7 @@ Zotero.Annotaters = {};
 		this._contentDoc = contentDoc;
 		this._curCallbacks = {};
 			var initScale = 1;
-		this._mode = 's';
+		this._mode = 'r';
 
 		contentDoc.defaultView.wrappedJSObject.build(this._mode, initScale, oldAnnos);
 	};
@@ -384,8 +383,7 @@ Zotero.Annotaters = {};
 				'zotero-annotate-tb-video-drawer-movie': 'm',
 				'zotero-annotate-tb-video-drawer-rectangle': 'r',
 				'zotero-annotate-tb-video-drawer-ellipse': 'e',
-				'zotero-annotate-tb-video-drawer-polygon': 'p',
-				'zotero-annotate-tb-video-drawer-select': 's'
+				'zotero-annotate-tb-video-drawer-polygon': 'p'
 			};
 			const markToolCallbacks = {
 				"zotero-annotate-tb-video-time-marker-mark": "markNow"

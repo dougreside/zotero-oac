@@ -622,7 +622,7 @@
 								"rx": newRX,
 								"ry": newRY
 							});
-							//o._scale=(x * self._scale);
+						
 						}
 					else if (o.type=="path"){
 							var points = _createPointsFromPath(o.attrs.path.toString());
@@ -804,11 +804,9 @@
 						$("<div id='axe_start_node' class='axe_start_node'></div>").appendTo((self._cont)).mouseenter(function(){
 						$(this).removeClass("axe_start_node");
 						$(this).addClass("axe_start_node_selected");
-						//	$(this).css({'width':'10px', 'height':'10px','background-image':'url("../images/axe_red_large.png")'});
 					}).mouseleave(function(){
 									$(this).addClass("axe_start_node");
 				$(this).removeClass("axe_start_node_selected");
-						//	$(this).css({'width':'7px', 'height':'7px','background-image':'url("../images/axe_red_small.png")'});
 						});
 						$("#axe_start_node").css({"top":self._points[0].y,"left":self._points[0].x});
                      }
@@ -818,7 +816,6 @@
 					//NEW METHOD for selecting shapes:
 					if (!(e.target.id == "selBB")) {
 						if (self._obj) {
-							//self._obj.cur.attr(INIT_ATTRS);
 							
 						}
 						self._obj = null;
@@ -859,9 +856,7 @@
 								
 						});
 					}
-					
-					//var bb = targetObj.cur.getBBox();
-					//var bb = $("#"+targetObj.id+":first")[0].getBBox();
+
 					var bb = targetObj.getBBox();
 					var bbH = parseFloat(bb.height);
 					var bbW = parseFloat(bb.width);
@@ -890,7 +885,7 @@
 						self._tarObj = self._obj;
 					}
 					$("#selBB").trigger("shapeSelected");
-				/*	$("#selBB").draggable({
+					$("#selBB").draggable({
 						containment: self._cont,
 						start: function(e,ui){
 							
@@ -971,10 +966,10 @@
 						
 						}
 					});
-					*/
+					
 					if (self._tarObj.type != "path") {
 						
-						/*$("#selBB").resizable({
+						$("#selBB").resizable({
 							handles:'all',
 							start: function(e, ui){
 								tobj = self._tarObj;
@@ -1016,7 +1011,7 @@
 								//self._updateJSONShape(tobj.id);
 								$(this).trigger("shapeChanged",[self.exportShapes()]);
 							}
-						});*/
+						});
 					}
 					self._obj = targetObj;
 						}

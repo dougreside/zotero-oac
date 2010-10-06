@@ -111,10 +111,7 @@ function imageZoomOut(){
 		//zooming in
 		drawer.scale(.75); 
 }
-function changescale(s) {
-	alert("scale");
-	drawer.scale(s);
-}
+
 
 function mode(m) {
 	
